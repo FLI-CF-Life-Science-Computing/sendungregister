@@ -1,0 +1,88 @@
+{% extends "base.html" %}  {% load static %} {% block extrascripts %}{% load widget_tweaks %}
+
+
+<script>
+  $(document).ready(function () {
+    $('#datatable').DataTable({
+      "searching": true,
+      "scrollX": false,
+      "scrollY": "500px",
+      "order": [[0, 'desc']],
+      "scrollCollapse": true,
+      "paging": true,
+      "pageLength": 25,
+      "fixedHeader": true, 
+    });
+  });
+</script> {% endblock %} {% block content %}
+<style>
+  #filterform label {
+    font-size: 75%;
+  }
+
+  #filterform select {
+    font-size: 75%;
+  }
+
+  #filterform input {
+    font-size: 75%;
+  }
+
+  #filterform {
+    padding: 10px;
+  }
+</style>
+<h1 class="text-center"> FLI Sendungsregister</h1>
+<form action="/exportadvanced" method="POST"> {% csrf_token %}
+  <div class="col-lg-12">
+    <div class="table-responsive">
+      <table id="datatable" class="table is-striped is-hoverable is-scrollable">
+        <thead>
+          <tr>
+          <th class="header"> Description of the material</th>
+          <th class="header"> Species</th>
+          <th class="header"> Category of the material</th>
+          <th class="header"> Amount</th>
+          <th class="header"> Name and address of shipper</th>
+          <th class="header"> Name and address of recipient/user</th>
+          <th class="header"> Date and type of disposal</th>
+          <th class="header"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for f in filter.qs %}
+          <tr>
+            <td>{{f.material}}</td>
+            <td>{{f.specie}}</td>
+            <td>{{f.category}}</td>
+            <td>{{f.amount}} {{f.unit}}</td>
+            <td>{{f.point_of_origin}}</td>
+            <td>{{f.recipient}}</td>
+            <td>{{f.date_of_disposal}} {{f.disposal_type}}</td>
+            <td><a href="/edit/{{f.pk}}">edit</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <p>
+        <a class="btn btn-dark" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+          Options
+        </a>
+      </p>
+      <div class="collapse" id="collapseExample">
+        <a href="/export" class="btn btn-primary">Export</a>
+        <br>
+        <br>
+        <input type="submit" name='claim' value="Export advanced" class="btn btn-primary">
+        <tr><td>from </td><td><input type="date" name="exportFromDate" value="{{m.from|date:"d/m/Y"}}" required=True></td></tr>
+        <tr><td>to </td><td><input type="date" name="exportToDate" value="{{m.to|date:"d/m/Y"}}" required=True></td></tr>
+        <!--br>
+        <br>
+        <a-- href="/changes" class="btn btn-primary">View Maintenance History</a-->
+      </div>
+      
+
+    </div>
+  </div>
+</form>
+{% endblock %}
