@@ -27,9 +27,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # Application definition
-
+#https://django-autocomplete-light.readthedocs.io/en/master/tutorial.html
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
