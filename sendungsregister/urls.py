@@ -24,5 +24,6 @@ from tnb import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', tnb.views.overview, name='startview'),
+    path('addentry/', tnb.views.addDataset, name='addDataset'),
     path('accounts/', include('django.contrib.auth.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

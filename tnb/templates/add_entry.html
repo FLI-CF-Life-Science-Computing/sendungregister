@@ -1,0 +1,17 @@
+{% extends "base.html" %}  {% load static %} {% block extrascripts %}
+{% load crispy_forms_tags %}
+{% load bulma_tags %}
+
+{% endblock %}{% block content %}
+<h1 class="text-center"> FLI Sendungsregister - New Entry</h1>
+<form  enctype="multipart/form-data" action="/addapplication/" method="post">
+<table>
+    {% csrf_token %}
+    {{form|crispy}}
+</table>
+<section class="section">
+<input type="submit" value="Submit" class="btn btn-primary">
+</section>
+</form>
+
+{% endblock %}

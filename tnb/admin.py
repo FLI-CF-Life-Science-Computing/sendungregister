@@ -9,3 +9,28 @@ class ProfileAdmin(admin.ModelAdmin):
 @admin.register(Lab)
 class LabAdmin(admin.ModelAdmin):
     search_fields = ('name','status')
+
+@admin.register(Material)
+class MaterialAdmin(admin.ModelAdmin):
+    search_fields = ('name','status')
+
+@admin.register(Specie)
+class SpecieAdmin(admin.ModelAdmin):
+    search_fields = ('name','status')
+
+
+@admin.register(Unit)
+class UnitAdmin(admin.ModelAdmin):
+    search_fields = ('name','status')
+
+@admin.register(Address)
+class AddressAdmin(admin.ModelAdmin):
+    search_fields = ('name','street','postal_code','city')
+
+@admin.register(Disposal_type)
+class Disposal_typeAdmin(admin.ModelAdmin):
+    search_fields = ('name','street','postal_code','city')
+
+@admin.register(Dataset)
+class DatasetAdmin(admin.ModelAdmin):
+    search_fields = ('material__name','specie__name','disposal_type__name','lab__name')

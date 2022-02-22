@@ -8,6 +8,7 @@ import os, sys
 from django.core.mail import send_mail
 from .models import Profile, Dataset
 from .filters import DatasetFilter
+from .forms import AddDatasetForm
 
 
 def send_info_mail_to_tec_admin(e,procedure):
@@ -35,4 +36,27 @@ def overview(request):
         send_info_mail_to_tec_admin(e,"overview")
         messages.error(request, 'Error: {}'.format(e))
         return HttpResponseRedirect('/')  # Redirect after POST
+
+@login_required
+def addDataset(request):
+    try:
+        if request.method == 'POST':  # If the form has been submitted...
+            form = AddDatasetForm(request.POST, request.FILES)  # A form bound to the POST data
+            if form.is_valid():  # All validation rules pass
+                new_dataset = form.save()
+                new_dataset.added_by = request.user
+                new_dataset.save()
+                messages.success(request, 'Dataset created')
+                return HttpResponseRedirect('/')  # Redirect after POST
+            else:
+                messages.error(request, 'The form is not valid. Please try it again')
+                return render(request, 'add_entry.html', {'form': AddDatasetForm()})
+        else:
+            return render(request, 'add_entry.html', {'form': AddDatasetForm()})
+    except BaseException as e:
+        send_info_mail_to_tec_admin(e,"addDataset")
+        messages.error(request, 'Error creating a new dataset {}'.format(e))
+        return HttpResponseRedirect('/') 
+
+
 
