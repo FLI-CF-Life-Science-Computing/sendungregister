@@ -6,14 +6,15 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 import os, sys
 from django.core.mail import send_mail
-from .models import Profile, Dataset
+from .models import Profile, Dataset, Book
 from .filters import DatasetFilter
-from .forms import AddDatasetForm
+from .forms import AddDatasetForm, MaterialForm, BookForm
+from django.views import generic
 
 
 def send_info_mail_to_tec_admin(e,procedure):
     tec_admin_mail = getattr(settings, "TEC_ADMIN_EMAIL", None)
-    send_mail("Error Sendungsregister","Sendungsregister error {} in procedure {} in line {} ".format(e,procedure,sys.exc_info()[2].tb_lineno) , "sendungsregister@leibniz-fli.de",[tec_admin_mail])
+    #send_mail("Error Sendungsregister","Sendungsregister error {} in procedure {} in line {} ".format(e,procedure,sys.exc_info()[2].tb_lineno) , "sendungsregister@leibniz-fli.de",[tec_admin_mail])
 
 def send_info_mail_about_new_user(user):
     tec_admin_mail = getattr(settings, "TEC_ADMIN_EMAIL", None)
@@ -59,4 +60,23 @@ def addDataset(request):
         return HttpResponseRedirect('/') 
 
 
+@login_required
+def addMaterialPopup(request):
+    try:
+        form = MaterialForm(request.POST or None)
+        if form.is_valid():
+            instance = form.save()
+            return HttpResponse('<script>opener.closePopup(window, "{}", "{}", "#id_material");</script>'.format(instance.pk, instance))
+        return render(request, "material_form.html", {"form" : form})
+    except BaseException as e:
+        send_info_mail_to_tec_admin(e,"addMaterialPopup")
+        messages.error(request, 'Error creating a new Material {}'.format(e))
+        return HttpResponseRedirect('/') 
+
+       
+
+class DatasetCreateView(generic.CreateView):
+    model = Dataset
+    form_class = AddDatasetForm
+    success_url = "/"
 

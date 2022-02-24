@@ -14,16 +14,22 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
 from django.conf import settings
 from django.conf.urls.static import static
-import tnb
-from tnb import views
+import tnp
+from tnp.models import Address
+from tnp import views
+from tnp import autocompleteviews
 #from tnb import urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', tnb.views.overview, name='startview'),
-    path('addentry/', tnb.views.addDataset, name='addDataset'),
-    path('accounts/', include('django.contrib.auth.urls')),
+    path('', tnp.views.overview, name='startview'),
+    path('addentry/', tnp.views.addDataset, name='addDataset'),
+    re_path(r'^create/material', tnp.views.addMaterialPopup, name = "addMaterial"),
+    #re_path(r'^address-autocomplete/$', autocomplete.Select2QuerySetView.as_view(model=Address), name = "address-autocomplete"),
+    #re_path(r'^address-autocomplete/$', autocompleteviews.AddressAutocomplete.as_view(), name = "address-autocomplete"),
+    path("select2/", include("django_select2.urls")),
+    path("dataset/create", views.DatasetCreateView.as_view(), name="dataset-create"),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

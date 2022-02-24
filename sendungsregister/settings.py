@@ -32,6 +32,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # Application definition
 #https://django-autocomplete-light.readthedocs.io/en/master/tutorial.html
 INSTALLED_APPS = [
+    'django_select2',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_filters',
-    'tnb',
+    'tnp',
     'bulma',
     'django_extensions',
     'crispy_forms',
@@ -88,6 +89,23 @@ DATABASES = {
     }
 }
 
+CACHES = {
+    # … default cache config and others
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379',
+    },
+    "select2": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/2",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
+# Tell select2 which cache configuration to use:
+SELECT2_CACHE_BACKEND = "select2"
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators

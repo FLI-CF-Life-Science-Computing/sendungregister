@@ -1,0 +1,46 @@
+{% extends "base.html" %}  {% load static %} 
+{% block extrascripts %}
+{% load crispy_forms_tags %}
+{% load bulma_tags %}
+<script type="text/javascript">
+    function showEditPopup(url) {
+        var win = window.open(url, "Edit", 
+            'height=500,width=800,resizable=yes,scrollbars=yes');
+        return false;
+    }
+    function showAddPopup(triggeringLink) {
+        var name = triggeringLink.id.replace(/^add_/, '');
+        href = triggeringLink.href;
+        var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
+        win.focus();
+        return false;
+    }
+    function closePopup(win, newID, newRepr, id) {
+        $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
+        win.close();
+    }   
+</script>
+{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Create Book</title>
+    {{ form.media.css }}
+    <style>
+        input, select {width: 100%}
+    </style>
+</head>
+<body>
+    <h1>Create a new Book</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form|crispy}}
+        <input type="submit">
+    </form>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    {{ form.media.js }}
+</body>
+</html>
+{% endblock %}

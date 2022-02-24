@@ -1,0 +1,37 @@
+{% extends "base.html" %}  {% load static %} {% block extrascripts %}
+{% load crispy_forms_tags %}
+{% load bulma_tags %}
+<script type="text/javascript">
+    function showEditPopup(url) {
+        var win = window.open(url, "Edit", 
+            'height=500,width=800,resizable=yes,scrollbars=yes');
+        return false;
+    }
+    function showAddPopup(triggeringLink) {
+        var name = triggeringLink.id.replace(/^add_/, '');
+        href = triggeringLink.href;
+        var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
+        win.focus();
+        return false;
+    }
+    function closePopup(win, newID, newRepr, id) {
+        $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
+        win.close();
+    }   
+</script>
+{% endblock %}
+
+{% block content %}
+<h1 class="text-center"> FLI Sendungsregister - New Entry</h1>
+<form  enctype="multipart/form-data" action="/addapplication/" method="post">
+<table>
+    {% csrf_token %}
+    {{form|crispy}}
+</table>
+<section class="section">
+<input type="submit" value="Submit" class="btn btn-primary">
+</section>
+</form>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    {{ form.media.js }}
+{% endblock %}

@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class TnbConfig(AppConfig):
+class TnpConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'tnb'
+    name = 'tnp'

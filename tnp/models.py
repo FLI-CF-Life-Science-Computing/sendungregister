@@ -5,6 +5,7 @@ from django.db import models
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
+from django.conf import settings
 
 class Lab(models.Model):
 
@@ -98,6 +99,10 @@ class Profile(models.Model):
     lab  = models.ForeignKey(Lab, null=True, on_delete=models.CASCADE)
     def __str__(self):
         return self.user.username
+
+class Book(models.Model):
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    co_authors = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='co_authored_by')
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
