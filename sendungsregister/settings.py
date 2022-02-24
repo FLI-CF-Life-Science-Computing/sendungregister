@@ -10,7 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 import os
+import ldap
+from django_auth_ldap.config import LDAPSearch
 from pathlib import Path
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -75,6 +78,22 @@ TEMPLATES = [
         },
     },
 ]
+
+
+AUTH_LDAP_CONNECTION_OPTIONS = {ldap.OPT_REFERRALS: 0 }
+AUTH_LDAP_SERVER_URI = ""
+AUTH_LDAP_USER_SEARCH = LDAPSearch(
+    "",
+    ldap.SCOPE_SUBTREE,
+    "(sAMAccountName=%(user)s)")
+AUTH_LDAP_BIND_AS_AUTHENTICATING_USER = True
+AUTH_LDAP_USER_ATTR_MAP = {
+    "email": "mail",
+    "first_name": "givenName",
+    "last_name": "sn",
+}
+AUTH_LDAP_PROFILE_ATTR_MAP = {
+}
 
 WSGI_APPLICATION = 'sendungsregister.wsgi.application'
 
