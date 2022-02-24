@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import include, path, re_path
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth.decorators import login_required
 import tnp
 from tnp.models import Address
 from tnp import views
@@ -27,9 +28,13 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', tnp.views.overview, name='startview'),
     path('addentry/', tnp.views.addDataset, name='addDataset'),
-    re_path(r'^create/material', tnp.views.addMaterialPopup, name = "addMaterial"),
+    path('accounts/', include('django.contrib.auth.urls')),
+    re_path(r'^create/material', login_required(tnp.views.addMaterialPopup), name = "addMaterial"),
+    re_path(r'^create/sender_address', login_required(tnp.views.addAddressSenderPopup), name = "addAddressSender"),
+    re_path(r'^create/origin_address', login_required(tnp.views.addAddressOriginPopup), name = "addAddressOrigin"),
+    re_path(r'^create/recipient_address', login_required(tnp.views.addAddressRecipientPopup), name = "addAddressRecipient"),
     #re_path(r'^address-autocomplete/$', autocomplete.Select2QuerySetView.as_view(model=Address), name = "address-autocomplete"),
     #re_path(r'^address-autocomplete/$', autocompleteviews.AddressAutocomplete.as_view(), name = "address-autocomplete"),
     path("select2/", include("django_select2.urls")),
-    path("dataset/create", views.DatasetCreateView.as_view(), name="dataset-create"),
+    path("dataset/create", login_required(views.DatasetCreateView.as_view()), name="dataset-create"),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

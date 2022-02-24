@@ -39,13 +39,14 @@
       <table id="datatable" class="table is-striped is-hoverable is-scrollable">
         <thead>
           <tr>
-          <th class="header"> Description of the material</th>
+          <th class="header"> Description Material</th>
           <th class="header"> Species</th>
-          <th class="header"> Category of the material</th>
+          <th class="header"> Category Material</th>
           <th class="header"> Amount</th>
-          <th class="header"> Name and address of shipper</th>
-          <th class="header"> Name and address of recipient/user</th>
-          <th class="header"> Date and type of disposal</th>
+          <th class="header"> Name / Address Point Of Origin</th>
+          <th class="header"> Name / Address Shipper</th>
+          <th class="header"> Name / Address Recipient/User</th>
+          <th class="header"> Date / Type Disposal</th>
           <th class="header"></th>
           </tr>
         </thead>
@@ -57,6 +58,7 @@
             <td>{{f.category}}</td>
             <td>{{f.amount}} {{f.unit}}</td>
             <td>{{f.point_of_origin}}</td>
+            <td>{{f.sender}}</td>
             <td>{{f.recipient}}</td>
             <td>{{f.date_of_disposal}} {{f.disposal_type}}</td>
             <td><a href="/edit/{{f.pk}}">edit</a></td>

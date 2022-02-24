@@ -1,3 +1,4 @@
+import profile
 from django.shortcuts import render, redirect, get_object_or_404
 from datetime import datetime, timedelta, date
 from django.conf import settings
@@ -6,9 +7,9 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 import os, sys
 from django.core.mail import send_mail
-from .models import Profile, Dataset, Book
+from .models import Profile, Dataset
 from .filters import DatasetFilter
-from .forms import AddDatasetForm, MaterialForm, BookForm
+from .forms import AddDatasetForm, MaterialForm, AddressForm
 from django.views import generic
 
 
@@ -73,10 +74,55 @@ def addMaterialPopup(request):
         messages.error(request, 'Error creating a new Material {}'.format(e))
         return HttpResponseRedirect('/') 
 
+@login_required
+def addAddressOriginPopup(request):
+    try:
+        form = AddressForm(request.POST or None)
+        if form.is_valid():
+            instance = form.save()
+            return HttpResponse('<script>opener.closePopup(window, "{}", "{}", "#id_point_of_origin");</script>'.format(instance.pk, instance))
+        return render(request, "address_form.html", {"form" : form})
+    except BaseException as e:
+        send_info_mail_to_tec_admin(e,"addMaterialPopup")
+        messages.error(request, 'Error creating a new Material {}'.format(e))
+        return HttpResponseRedirect('/') 
+
+@login_required
+def addAddressSenderPopup(request):
+    try:
+        form = AddressForm(request.POST or None)
+        if form.is_valid():
+            instance = form.save()
+            return HttpResponse('<script>opener.closePopup(window, "{}", "{}", "#id_sender");</script>'.format(instance.pk, instance))
+        return render(request, "address_form.html", {"form" : form})
+    except BaseException as e:
+        send_info_mail_to_tec_admin(e,"addMaterialPopup")
+        messages.error(request, 'Error creating a new Material {}'.format(e))
+        return HttpResponseRedirect('/') 
+
+
+@login_required
+def addAddressRecipientPopup(request):
+    try:
+        form = AddressForm(request.POST or None)
+        if form.is_valid():
+            instance = form.save()
+            return HttpResponse('<script>opener.closePopup(window, "{}", "{}", "#id_recipient");</script>'.format(instance.pk, instance))
+        return render(request, "address_form.html", {"form" : form})
+    except BaseException as e:
+        send_info_mail_to_tec_admin(e,"addMaterialPopup")
+        messages.error(request, 'Error creating a new Material {}'.format(e))
+        return HttpResponseRedirect('/') 
        
 
 class DatasetCreateView(generic.CreateView):
     model = Dataset
     form_class = AddDatasetForm
+    initial = {'amount':'2'}
     success_url = "/"
 
+    def form_valid(self, form):
+        form.instance.added_by = self.request.user
+        profile = get_object_or_404(Profile, user=self.request.user)
+        form.instance.lab = profile.lab
+        return super().form_valid(form)

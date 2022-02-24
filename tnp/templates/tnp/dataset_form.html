@@ -2,16 +2,19 @@
 {% block extrascripts %}
 {% load crispy_forms_tags %}
 {% load bulma_tags %}
+
+<link rel="stylesheet" type="text/css" href="/static/css/jquery.datetimepicker.min.css"/>
+<script type="text/javascript" src="/static/js/jquery.datetimepicker.full.min.js"></script>
 <script type="text/javascript">
     function showEditPopup(url) {
         var win = window.open(url, "Edit", 
-            'height=500,width=800,resizable=yes,scrollbars=yes');
+            'height=800,width=800,resizable=yes,scrollbars=yes');
         return false;
     }
     function showAddPopup(triggeringLink) {
         var name = triggeringLink.id.replace(/^add_/, '');
         href = triggeringLink.href;
-        var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
+        var win = window.open(href, name, 'height=800,width=800,resizable=yes,scrollbars=yes');
         win.focus();
         return false;
     }
@@ -20,27 +23,23 @@
         win.close();
     }   
 </script>
-{% endblock %}
+{{ form.media.css }}
+{% endblock %} 
 
 {% block content %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Create Book</title>
-    {{ form.media.css }}
-    <style>
-        input, select {width: 100%}
-    </style>
-</head>
-<body>
-    <h1>Create a new Book</h1>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form|crispy}}
-        <input type="submit">
-    </form>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    {{ form.media.js }}
-</body>
-</html>
+<h1 class="text-center"> FLI Sendungsregister - New Entry</h1>
+<form method="POST">
+    {% csrf_token %}
+    {{ form|crispy}}
+    <input type="submit" value="Submit" class="btn btn-primary">
+</form>
+<script>
+    $(function () {
+      $("#id_date_of_disposal").datetimepicker({
+        format: 'd/m/Y',
+        timepicker:false,
+      });
+    });
+  </script>
+{{ form.media.js }}
 {% endblock %}

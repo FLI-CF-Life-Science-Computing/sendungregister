@@ -1,6 +1,3 @@
-from telnetlib import STATUS
-from types import CoroutineType
-from unicodedata import name
 from django.db import models
 from django.dispatch import receiver
 from django.db.models.signals import post_save
@@ -64,7 +61,7 @@ class Address(models.Model):
         ),default='active')
     #address = models.ForeignKey(Address, null=False, on_delete=models.CASCADE)
     def __str__(self):
-        return self.name
+        return "{}, {}, {}, {}".format(self.name,self.street,self.postal_code,self.city)
 
 
 class Disposal_type(models.Model):
@@ -87,9 +84,10 @@ class Dataset(models.Model):
     amount              = models.PositiveIntegerField()
     unit                = models.ForeignKey(Unit, null=False, blank=False, on_delete=models.CASCADE)
     point_of_origin     = models.ForeignKey(Address, null=False, blank=False, on_delete=models.CASCADE, related_name='origin_address')
+    sender              = models.ForeignKey(Address, null=False, blank=False, on_delete=models.CASCADE, related_name='sender_address')
     recipient           = models.ForeignKey(Address, null=False, blank=False, on_delete=models.CASCADE, related_name='recipient_address')
     date_of_disposal    = models.DateField(null=True, blank=True)
-    disposal_type       = models.ForeignKey(Disposal_type, null=False, blank=False, on_delete=models.CASCADE)
+    disposal_type       = models.ForeignKey(Disposal_type, null=True, blank=True, on_delete=models.CASCADE)
     added_by            = models.ForeignKey(User, null=False, blank=False, on_delete=models.CASCADE)
     creation_date       = models.DateTimeField(null=False, auto_now_add=True)
     lab                 = models.ForeignKey(Lab, null=False, blank=False, on_delete=models.CASCADE)
