@@ -18,13 +18,15 @@ class AddressWidget2(s2forms.ModelSelect2Widget):
     ]
 
 class AddDatasetForm(forms.ModelForm):
-    date_of_disposal     = forms.DateField(input_formats=['%d/%m/%Y'],required=False)
+    #date_of_disposal     = forms.DateField(input_formats=['%d/%m/%Y'],required=False)
+    prospective_date_of_disposal = forms.DateField(input_formats=['%d/%m/%Y'],required=False, help_text='Voraussichtliches Entsorgungsdatum')
+    field_order = ['material', 'specie', 'category','unit','amount','point_of_origin','sender','recipient']
 
     def __init__(self,*args,**kwargs):
         super (AddDatasetForm,self ).__init__(*args,**kwargs) # populates the post
-        self.fields['material'].queryset = Material.objects.filter(status="active").order_by('name')
-        link_to_add_new_material = '<a href="/create/material" id="add_material" onclick="return showAddPopup(this);"><img src = "/static/admin/img/icon-addlink.svg"></a>'
-        self.fields['material'].label = "Material {}".format(link_to_add_new_material)
+        #self.fields['material'].queryset = Material.objects.filter(status="active").order_by('name')
+        #link_to_add_new_material = '<a href="/create/material" id="add_material" onclick="return showAddPopup(this);"><img src = "/static/admin/img/icon-addlink.svg"></a>'
+        #self.fields['material'].label = "Material {}".format(link_to_add_new_material)
 
         self.fields['point_of_origin'].queryset = Address.objects.filter(status="active").order_by('name')
         link_to_add_new_address = '<a href="/create/origin_address" id="add_address" onclick="return showAddPopup(this);"><img src = "/static/admin/img/icon-addlink.svg"></a>'
@@ -38,10 +40,9 @@ class AddDatasetForm(forms.ModelForm):
         link_to_add_new_address = '<a href="/create/recipient_address" id="add_recipient" onclick="return showAddPopup(this);"><img src = "/static/admin/img/icon-addlink.svg"></a>'
         self.fields['recipient'].label = "Recipient {}".format(link_to_add_new_address)
 
-
     class Meta: 
         model = Dataset
-        exclude = ('added_by','creation_date','lab')
+        exclude = ('added_by','creation_date','lab','date_of_disposal','disposal_type','status')
         widgets = {
             'recipient': AddressWidget,
             'point_of_origin':AddressWidget,
@@ -60,30 +61,22 @@ class AddressForm(forms.ModelForm):
 
 
 class DatasetEditForm(forms.ModelForm):
-    date_of_disposal     = forms.DateField(input_formats=['%d/%m/%Y'],required=False)
-
+    date_of_disposal     = forms.DateField(input_formats=['%d/%m/%Y'],required=False, help_text='Entsorgungsdatum')
+    prospective_date_of_disposal = forms.DateField(input_formats=['%d/%m/%Y'],required=False, help_text='Voraussichtliches Entsorgungsdatum')
+    field_order = ['material', 'specie', 'category','unit','amount','point_of_origin','sender','recipient','prospective_date_of_disposal','date_of_disposal','disposal_type']
     def __init__(self,*args,**kwargs):
-        super (DatasetEditForm,self ).__init__(*args,**kwargs) # populates the post
-        self.fields['material'].queryset = Material.objects.filter(status="active").order_by('name')
-        link_to_add_new_material = '<a href="/create/material" id="add_material" onclick="return showAddPopup(this);"><img src = "/static/admin/img/icon-addlink.svg"></a>'
-        self.fields['material'].label = "Material {}".format(link_to_add_new_material)
-
-        self.fields['point_of_origin'].queryset = Address.objects.filter(status="active").order_by('name')
-        link_to_add_new_address = '<a href="/create/origin_address" id="add_address" onclick="return showAddPopup(this);"><img src = "/static/admin/img/icon-addlink.svg"></a>'
-        self.fields['point_of_origin'].label = "Point of origin {}".format(link_to_add_new_address)
-
-        self.fields['sender'].queryset = Address.objects.filter(status="active").order_by('name')
-        link_to_add_new_address = '<a href="/create/sender_address" id="add_sender" onclick="return showAddPopup(this);"><img src = "/static/admin/img/icon-addlink.svg"></a>'
-        self.fields['sender'].label = "Sender {}".format(link_to_add_new_address)
-
-        self.fields['recipient'].queryset = Address.objects.filter(status="active").order_by('name')
-        link_to_add_new_address = '<a href="/create/recipient_address" id="add_recipient" onclick="return showAddPopup(this);"><img src = "/static/admin/img/icon-addlink.svg"></a>'
-        self.fields['recipient'].label = "Recipient {}".format(link_to_add_new_address)
-
-
+        super (DatasetEditForm,self ).__init__(*args,**kwargs)
+        self.fields['material'].disabled = True
+        self.fields['specie'].disabled = True
+        self.fields['category'].disabled = True
+        self.fields['unit'].disabled = True
+        self.fields['amount'].disabled = True
+        self.fields['point_of_origin'].disabled = True
+        self.fields['sender'].disabled = True
+        self.fields['recipient'].disabled = True
     class Meta: 
         model = Dataset
-        exclude = ('added_by','creation_date','lab')
+        exclude = ('added_by','creation_date','lab','status')
         widgets = {
             'recipient': AddressWidget,
             'point_of_origin':AddressWidget,

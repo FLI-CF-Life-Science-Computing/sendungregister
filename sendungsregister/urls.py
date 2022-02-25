@@ -27,6 +27,7 @@ from tnp import autocompleteviews
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', tnp.views.overview, name='startview'),
+    path('history/', tnp.views.historyView, name='history'),
     path('addentry/', tnp.views.addDataset, name='addDataset'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('edit/<int:primary_key>', tnp.views.editDatasetView, name="editDataset"),

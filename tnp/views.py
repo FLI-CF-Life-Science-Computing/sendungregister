@@ -28,9 +28,9 @@ def overview(request):
         profile = get_object_or_404(Profile, user=request.user)
         if profile.lab:
             if profile.lab.name == "Admin":
-                entries = Dataset.objects.all()
+                entries = Dataset.objects.all().order_by('creation_date')
             else:
-                entries = Dataset.objects.filter(lab=profile.lab)
+                entries = Dataset.objects.filter(lab=profile.lab).filter(status='o').order_by('creation_date')
             f = DatasetFilter(request.GET, queryset=entries)
             return render(request, 'home.html', {'filter': f})
         else:
@@ -39,6 +39,26 @@ def overview(request):
             return HttpResponseRedirect('/accounts/logout')
     except BaseException as e:
         send_info_mail_to_tec_admin(e,"overview")
+        messages.error(request, 'Error: {}'.format(e))
+        return HttpResponseRedirect('/')  # Redirect after POST
+
+@login_required
+def historyView(request):
+    try:
+        profile = get_object_or_404(Profile, user=request.user)
+        if profile.lab:
+            if profile.lab.name == "Admin":
+                entries = Dataset.objects.all().order_by('creation_date')
+            else:
+                entries = Dataset.objects.filter(lab=profile.lab).order_by('creation_date')
+            f = DatasetFilter(request.GET, queryset=entries)
+            return render(request, 'history.html', {'filter': f})
+        else:
+            messages.error(request, 'You are not member of a lab. The administrator is informed about it to fix it')
+            send_info_mail_about_new_user(request.user)
+            return HttpResponseRedirect('/accounts/logout')
+    except BaseException as e:
+        send_info_mail_to_tec_admin(e,"historyView")
         messages.error(request, 'Error: {}'.format(e))
         return HttpResponseRedirect('/')  # Redirect after POST
 
@@ -122,7 +142,7 @@ def editDatasetView(request, primary_key):
     try:
         profile = get_object_or_404(Profile, user=request.user)
         dataset = get_object_or_404(Dataset, pk=primary_key)
-        if dataset.lab == profile.lab or profile.lab == 'Admin':
+        if dataset.lab == profile.lab or profile.lab.name == 'Admin':
             #form = DatasetEditForm(request.POST or None)
             return render(request, 'tnp/dataset_edit_form.html', {'form': DatasetEditForm(instance=dataset),'pk':dataset.pk})
             #return HttpResponse('<script>opener.closePopup(window, "{}", "{}", "#id_recipient");</script>'.format(instance.pk, instance))

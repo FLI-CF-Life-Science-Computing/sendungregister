@@ -74,23 +74,36 @@ class Disposal_type(models.Model):
         return self.name
 
 class Dataset(models.Model):
-    material            = models.ForeignKey(Material, null=False, blank=False, on_delete=models.CASCADE)
-    specie              = models.ForeignKey(Specie, null=False, blank=False, on_delete=models.CASCADE)
-    category            = models.CharField(max_length=2, choices=(
+    material            = models.ForeignKey(Material, null=False, blank=False, help_text='Material', on_delete=models.CASCADE)
+    specie              = models.ForeignKey(Specie, null=False, blank=False, help_text='Tierart', on_delete=models.CASCADE)
+    category            = models.CharField(max_length=2, help_text='Kategorie', choices=(
         ('1', '1'),
         ('2', '2'),
         ('3', '3'),
         ),default='3')    
-    amount              = models.PositiveIntegerField()
-    unit                = models.ForeignKey(Unit, null=False, blank=False, on_delete=models.CASCADE)
-    point_of_origin     = models.ForeignKey(Address, null=False, blank=False, on_delete=models.CASCADE, related_name='origin_address')
-    sender              = models.ForeignKey(Address, null=False, blank=False, on_delete=models.CASCADE, related_name='sender_address')
-    recipient           = models.ForeignKey(Address, null=False, blank=False, on_delete=models.CASCADE, related_name='recipient_address')
-    date_of_disposal    = models.DateField(null=True, blank=True)
-    disposal_type       = models.ForeignKey(Disposal_type, null=True, blank=True, on_delete=models.CASCADE)
+    amount              = models.DecimalField(max_digits=10, decimal_places=2, help_text='Menge')
+    unit                = models.ForeignKey(Unit, null=False, blank=False, help_text='Einheit', on_delete=models.CASCADE)
+    point_of_origin     = models.ForeignKey(Address, null=False, blank=False, on_delete=models.CASCADE, help_text='Herkunftsort', related_name='origin_address')
+    sender              = models.ForeignKey(Address, null=False, blank=False, on_delete=models.CASCADE, help_text='Absender', related_name='sender_address')
+    recipient           = models.ForeignKey(Address, null=False, blank=False, on_delete=models.CASCADE, help_text='Empfänger', related_name='recipient_address')
+    prospective_date_of_disposal = models.DateField(null=True, blank=True)
+    date_of_disposal    = models.DateField(null=True, blank=True, help_text='Entsorgungsdatum')
+    disposal_type       = models.ForeignKey(Disposal_type, null=True, blank=True, help_text='Entsorgungsart', on_delete=models.CASCADE)
     added_by            = models.ForeignKey(User, null=False, blank=False, on_delete=models.CASCADE)
     creation_date       = models.DateTimeField(null=False, auto_now_add=True)
     lab                 = models.ForeignKey(Lab, null=False, blank=False, on_delete=models.CASCADE)
+    status              = models.CharField(max_length=2, choices=(
+        ('o', 'open'),
+        ('c', 'closed'),
+        ),default='o')  
+    
+    def save(self, *args, **kwargs):
+        if self.disposal_type & self.date_of_disposal: 
+            self.status = 'c'
+        else:
+            self.status = 'o'
+            
+        return super(Dataset, self).save(*args, **kwargs)
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
