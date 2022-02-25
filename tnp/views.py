@@ -122,7 +122,7 @@ def editDatasetView(request, primary_key):
     try:
         profile = get_object_or_404(Profile, user=request.user)
         dataset = get_object_or_404(Dataset, pk=primary_key)
-        if dataset.lab == profile.lab:
+        if dataset.lab == profile.lab or profile.lab == 'Admin':
             #form = DatasetEditForm(request.POST or None)
             return render(request, 'tnp/dataset_edit_form.html', {'form': DatasetEditForm(instance=dataset),'pk':dataset.pk})
             #return HttpResponse('<script>opener.closePopup(window, "{}", "{}", "#id_recipient");</script>'.format(instance.pk, instance))
