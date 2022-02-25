@@ -29,6 +29,7 @@ urlpatterns = [
     path('', tnp.views.overview, name='startview'),
     path('addentry/', tnp.views.addDataset, name='addDataset'),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('edit/<int:primary_key>', tnp.views.editDatasetView, name="editDataset"),
     re_path(r'^create/material', login_required(tnp.views.addMaterialPopup), name = "addMaterial"),
     re_path(r'^create/sender_address', login_required(tnp.views.addAddressSenderPopup), name = "addAddressSender"),
     re_path(r'^create/origin_address', login_required(tnp.views.addAddressOriginPopup), name = "addAddressOrigin"),

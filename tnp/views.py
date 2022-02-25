@@ -9,7 +9,7 @@ import os, sys
 from django.core.mail import send_mail
 from .models import Profile, Dataset
 from .filters import DatasetFilter
-from .forms import AddDatasetForm, MaterialForm, AddressForm
+from .forms import AddDatasetForm, MaterialForm, AddressForm, DatasetEditForm
 from django.views import generic
 
 
@@ -86,8 +86,8 @@ def addAddressOriginPopup(request):
             return HttpResponse('<script>opener.closePopup(window, "{}", "{}", "#id_point_of_origin");</script>'.format(instance.pk, instance))
         return render(request, "address_form.html", {"form" : form})
     except BaseException as e:
-        send_info_mail_to_tec_admin(e,"addMaterialPopup")
-        messages.error(request, 'Error creating a new Material {}'.format(e))
+        send_info_mail_to_tec_admin(e,"addAddressOriginPopup")
+        messages.error(request, 'Error creating a new Address {}'.format(e))
         return HttpResponseRedirect('/') 
 
 @login_required
@@ -99,8 +99,8 @@ def addAddressSenderPopup(request):
             return HttpResponse('<script>opener.closePopup(window, "{}", "{}", "#id_sender");</script>'.format(instance.pk, instance))
         return render(request, "address_form.html", {"form" : form})
     except BaseException as e:
-        send_info_mail_to_tec_admin(e,"addMaterialPopup")
-        messages.error(request, 'Error creating a new Material {}'.format(e))
+        send_info_mail_to_tec_admin(e,"addAddressSenderPopup")
+        messages.error(request, 'Error creating a new Address {}'.format(e))
         return HttpResponseRedirect('/') 
 
 
@@ -113,8 +113,25 @@ def addAddressRecipientPopup(request):
             return HttpResponse('<script>opener.closePopup(window, "{}", "{}", "#id_recipient");</script>'.format(instance.pk, instance))
         return render(request, "address_form.html", {"form" : form})
     except BaseException as e:
-        send_info_mail_to_tec_admin(e,"addMaterialPopup")
-        messages.error(request, 'Error creating a new Material {}'.format(e))
+        send_info_mail_to_tec_admin(e,"addAddressRecipientPopup")
+        messages.error(request, 'Error creating a new Address {}'.format(e))
+        return HttpResponseRedirect('/') 
+
+@login_required
+def editDatasetView(request, primary_key):
+    try:
+        profile = get_object_or_404(Profile, user=request.user)
+        dataset = get_object_or_404(Dataset, pk=primary_key)
+        if dataset.lab == profile.lab:
+            #form = DatasetEditForm(request.POST or None)
+            return render(request, 'tnp/dataset_edit_form.html', {'form': DatasetEditForm(instance=dataset),'pk':dataset.pk})
+            #return HttpResponse('<script>opener.closePopup(window, "{}", "{}", "#id_recipient");</script>'.format(instance.pk, instance))
+        else:
+            messages.error(request, 'You don\'t have the permission to edit this dataset')
+            return HttpResponseRedirect('/') 
+    except BaseException as e:
+        send_info_mail_to_tec_admin(e,"editDatasetView")
+        messages.error(request, 'Error edit a Dataset {}'.format(e))
         return HttpResponseRedirect('/') 
        
 
