@@ -98,12 +98,12 @@ class Dataset(models.Model):
         ),default='o')  
     
     def save(self, *args, **kwargs):
-        if self.disposal_type & self.date_of_disposal: 
+        if self.disposal_type and self.date_of_disposal: 
             self.status = 'c'
         else:
             self.status = 'o'
-            
         return super(Dataset, self).save(*args, **kwargs)
+    
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)

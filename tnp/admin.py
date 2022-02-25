@@ -33,4 +33,5 @@ class Disposal_typeAdmin(admin.ModelAdmin):
 
 @admin.register(Dataset)
 class DatasetAdmin(admin.ModelAdmin):
+    list_display = ('material','specie','category','amount','unit','point_of_origin','added_by','lab','creation_date','status')
     search_fields = ('material__name','specie__name','disposal_type__name','lab__name')
