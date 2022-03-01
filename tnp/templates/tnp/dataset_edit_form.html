@@ -40,6 +40,12 @@
         timepicker:false,
       });
     });
+    $(function () {
+      $("#id_reminder_disposal").datetimepicker({
+        format: 'd/m/Y',
+        timepicker:false,
+      });
+    });
   </script>
 {{ form.media.js }}
 {% endblock %}

@@ -10,3 +10,4 @@ django-widget-tweaks>=1.4.8
 django-autocomplete-light>=3.9.0
 django-select2>=7.4.0
 django_redis>=5.2.0
+django-simple-history >=3.0.0

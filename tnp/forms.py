@@ -1,6 +1,6 @@
 from unicodedata import category
 from django import forms
-from .models import Address, Dataset, Material, Book
+from .models import Address, Dataset, Material, Book, Specie, Unit
 from django.core.files.uploadedfile import SimpleUploadedFile
 from datetime import datetime
 from django.contrib.auth.models import User
@@ -19,14 +19,17 @@ class AddressWidget2(s2forms.ModelSelect2Widget):
 
 class AddDatasetForm(forms.ModelForm):
     #date_of_disposal     = forms.DateField(input_formats=['%d/%m/%Y'],required=False)
-    prospective_date_of_disposal = forms.DateField(input_formats=['%d/%m/%Y'],required=False, help_text='Voraussichtliches Entsorgungsdatum')
+    reminder_disposal = forms.DateField(input_formats=['%d/%m/%Y'],required=False, help_text='Datum für Erinnerungsmail zum Eintragen des Entsorgungsdatum')
     field_order = ['material', 'specie', 'category','unit','amount','point_of_origin','sender','recipient']
+    material = forms.ModelChoiceField(queryset=Material.objects.filter(status='active').order_by('name'))
+    specie = forms.ModelChoiceField(queryset=Specie.objects.filter(status='active').order_by('name'))
+    unit = forms.ModelChoiceField(queryset=Unit.objects.filter(status='active').order_by('name'))
 
     def __init__(self,*args,**kwargs):
         super (AddDatasetForm,self ).__init__(*args,**kwargs) # populates the post
-        #self.fields['material'].queryset = Material.objects.filter(status="active").order_by('name')
-        #link_to_add_new_material = '<a href="/create/material" id="add_material" onclick="return showAddPopup(this);"><img src = "/static/admin/img/icon-addlink.svg"></a>'
-        #self.fields['material'].label = "Material {}".format(link_to_add_new_material)
+        self.fields['material'].queryset = Material.objects.filter(status="active").order_by('name')
+        link_to_add_new_material = '<a href="/create/material" id="add_material" onclick="return showAddPopup(this);"><img src = "/static/admin/img/icon-addlink.svg"></a>'
+        self.fields['material'].label = "Material {}".format(link_to_add_new_material)
 
         self.fields['point_of_origin'].queryset = Address.objects.filter(status="active").order_by('name')
         link_to_add_new_address = '<a href="/create/origin_address" id="add_address" onclick="return showAddPopup(this);"><img src = "/static/admin/img/icon-addlink.svg"></a>'
@@ -39,6 +42,9 @@ class AddDatasetForm(forms.ModelForm):
         self.fields['recipient'].queryset = Address.objects.filter(status="active").order_by('name')
         link_to_add_new_address = '<a href="/create/recipient_address" id="add_recipient" onclick="return showAddPopup(this);"><img src = "/static/admin/img/icon-addlink.svg"></a>'
         self.fields['recipient'].label = "Recipient {}".format(link_to_add_new_address)
+
+        link_to_category_definition = '<a href="https://www.bmel.de/DE/themen/tiere/tiergesundheit/tierische-nebenprodukte/tierische-nebenprodukte-kategorie.html" target="_blank">Info</a>'
+        self.fields['category'].label = "Category ({})".format(link_to_category_definition)
 
     class Meta: 
         model = Dataset
@@ -61,19 +67,37 @@ class AddressForm(forms.ModelForm):
 
 
 class DatasetEditForm(forms.ModelForm):
-    date_of_disposal     = forms.DateField(input_formats=['%d/%m/%Y'],required=False, help_text='Entsorgungsdatum')
-    prospective_date_of_disposal = forms.DateField(input_formats=['%d/%m/%Y'],required=False, help_text='Voraussichtliches Entsorgungsdatum')
+    reminder_disposal = forms.DateField(widget=forms.widgets.DateInput(format="%d/%m/%Y"),input_formats=['%d/%m/%Y'],required=False, help_text='Datum für Erinnerungsmail zum Eintragen des Entsorgungsdatum')
+    date_of_disposal     = forms.DateField(widget=forms.widgets.DateInput(format="%d/%m/%Y"),input_formats=['%d/%m/%Y'],required=False, help_text='Entsorgungsdatum')
     field_order = ['material', 'specie', 'category','unit','amount','point_of_origin','sender','recipient','prospective_date_of_disposal','date_of_disposal','disposal_type']
     def __init__(self,*args,**kwargs):
-        super (DatasetEditForm,self ).__init__(*args,**kwargs)
-        self.fields['material'].disabled = True
-        self.fields['specie'].disabled = True
-        self.fields['category'].disabled = True
-        self.fields['unit'].disabled = True
-        self.fields['amount'].disabled = True
-        self.fields['point_of_origin'].disabled = True
-        self.fields['sender'].disabled = True
-        self.fields['recipient'].disabled = True
+        super (DatasetEditForm,self ).__init__(*args,**kwargs) # populates the post
+        self.fields['material'].queryset = Material.objects.filter(status="active").order_by('name')
+        link_to_add_new_material = '<a href="/create/material" id="add_material" onclick="return showAddPopup(this);"><img src = "/static/admin/img/icon-addlink.svg"></a>'
+        self.fields['material'].label = "Material {}".format(link_to_add_new_material)
+
+        self.fields['point_of_origin'].queryset = Address.objects.filter(status="active").order_by('name')
+        link_to_add_new_address = '<a href="/create/origin_address" id="add_address" onclick="return showAddPopup(this);"><img src = "/static/admin/img/icon-addlink.svg"></a>'
+        self.fields['point_of_origin'].label = "Point of origin {}".format(link_to_add_new_address)
+
+        self.fields['sender'].queryset = Address.objects.filter(status="active").order_by('name')
+        link_to_add_new_address = '<a href="/create/sender_address" id="add_sender" onclick="return showAddPopup(this);"><img src = "/static/admin/img/icon-addlink.svg"></a>'
+        self.fields['sender'].label = "Sender {}".format(link_to_add_new_address)
+
+        self.fields['recipient'].queryset = Address.objects.filter(status="active").order_by('name')
+        link_to_add_new_address = '<a href="/create/recipient_address" id="add_recipient" onclick="return showAddPopup(this);"><img src = "/static/admin/img/icon-addlink.svg"></a>'
+        self.fields['recipient'].label = "Recipient {}".format(link_to_add_new_address)
+    
+    #def __init__(self,*args,**kwargs):
+    #    super (DatasetEditForm,self ).__init__(*args,**kwargs)
+    #    self.fields['material'].disabled = True
+    #    self.fields['specie'].disabled = True
+    #    self.fields['category'].disabled = True
+    #    self.fields['unit'].disabled = True
+    #    self.fields['amount'].disabled = True
+    #    self.fields['point_of_origin'].disabled = True
+    #    self.fields['sender'].disabled = True
+    #    self.fields['recipient'].disabled = True
     class Meta: 
         model = Dataset
         exclude = ('added_by','creation_date','lab','status')

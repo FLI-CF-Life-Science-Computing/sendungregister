@@ -46,8 +46,9 @@
           <th class="header"> Name / Address Point Of Origin</th>
           <th class="header"> Name / Address Shipper</th>
           <th class="header"> Name / Address Recipient/User</th>
-          <th class="header"> Planned Disposal</th>
           <th class="header"> Date / Type Disposal</th>
+          <th class="header"> Added By</th>
+          <th class="header"> Date Added</th>
           </tr>
         </thead>
         <tbody>
@@ -56,13 +57,13 @@
             <td>{{f.material}}</td>
             <td>{{f.specie}}</td>
             <td>{{f.category}}</td>
-            <td>{{f.amount}} {{f.unit}}</td>
+            <td>{{f.amount|floatformat}} {{f.unit}}</td>
             <td>{{f.point_of_origin}}</td>
             <td>{{f.sender}}</td>
             <td>{{f.recipient}}</td>
-            <td>{{f.recipient}}</td>
-            <td>{{f.prospective_date_of_disposal}}</td>
-            <td>{{f.date_of_disposal}} {{f.disposal_type}}</td>
+            <td>{{f.date_of_disposal|date:'d.m.Y'}} | {{f.disposal_type}}</td>
+            <td>{{f.added_by}}</td>
+            <td>{{f.creation_date|date:'d.m.Y'}}</td>
           </tr>
           {% endfor %}
         </tbody>

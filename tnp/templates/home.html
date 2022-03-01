@@ -46,7 +46,8 @@
           <th class="header"> Name / Address Point Of Origin</th>
           <th class="header"> Name / Address Shipper</th>
           <th class="header"> Name / Address Recipient/User</th>
-          <th class="header"> Planned Disposal</th>
+          <th class="header"> Added By</th>
+          <th class="header"> Date Added</th>
           <th class="header"></th>
           </tr>
         </thead>
@@ -60,8 +61,9 @@
             <td>{{f.point_of_origin}}</td>
             <td>{{f.sender}}</td>
             <td>{{f.recipient}}</td>
-            <td>{{f.prospective_date_of_disposal}}</td>
-            <td><a href="/edit/{{f.pk}}">Edit disposal</a></td>
+            <td>{{f.added_by}}</td>
+            <td>{{f.creation_date|date:'d.m.Y'}}</td>
+            <td><a href="/edit/{{f.pk}}">Edit</a></td>
           </tr>
           {% endfor %}
         </tbody>

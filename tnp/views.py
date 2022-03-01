@@ -28,7 +28,7 @@ def overview(request):
         profile = get_object_or_404(Profile, user=request.user)
         if profile.lab:
             if profile.lab.name == "Admin":
-                entries = Dataset.objects.all().order_by('creation_date')
+                entries = Dataset.objects.all().filter(status='o').order_by('creation_date')
             else:
                 entries = Dataset.objects.filter(lab=profile.lab).filter(status='o').order_by('creation_date')
             f = DatasetFilter(request.GET, queryset=entries)
@@ -48,9 +48,9 @@ def historyView(request):
         profile = get_object_or_404(Profile, user=request.user)
         if profile.lab:
             if profile.lab.name == "Admin":
-                entries = Dataset.objects.all().order_by('creation_date')
+                entries = Dataset.objects.filter(status='c').order_by('creation_date')
             else:
-                entries = Dataset.objects.filter(lab=profile.lab).order_by('creation_date')
+                entries = Dataset.objects.filter(lab=profile.lab).filter(status='c').order_by('creation_date')
             f = DatasetFilter(request.GET, queryset=entries)
             return render(request, 'history.html', {'filter': f})
         else:
@@ -144,6 +144,15 @@ def editDatasetView(request, primary_key):
         dataset = get_object_or_404(Dataset, pk=primary_key)
         if dataset.lab == profile.lab or profile.lab.name == 'Admin':
             #form = DatasetEditForm(request.POST or None)
+            if request.method == 'POST':
+                form = DatasetEditForm(request.POST, instance=dataset)
+                if form.is_valid():
+                    form.save()
+                    messages.success(request, 'Data saved successfully / Daten erfolgreich gespeichert')
+                    return HttpResponseRedirect('/') 
+                else:
+                    messages.error(request, 'Form is invalid. Please check your values: {}'.format(form.errors))
+                    return render(request, 'tnp/dataset_edit_form.html', {'form': DatasetEditForm(instance=dataset),'pk':dataset.pk})
             return render(request, 'tnp/dataset_edit_form.html', {'form': DatasetEditForm(instance=dataset),'pk':dataset.pk})
             #return HttpResponse('<script>opener.closePopup(window, "{}", "{}", "#id_recipient");</script>'.format(instance.pk, instance))
         else:
