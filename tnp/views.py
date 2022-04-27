@@ -18,8 +18,8 @@ def send_info_mail_to_tec_admin(e,procedure):
     send_mail("Error Sendungsregister","Sendungsregister error {} in procedure {} in line {} ".format(e,procedure,sys.exc_info()[2].tb_lineno) , "sendungsregister@leibniz-fli.de",[tec_admin_mail])
 
 def send_info_mail_about_new_user(user):
-    tec_admin_mail = getattr(settings, "TEC_ADMIN_EMAIL", None)
-    send_mail("Sendungsregister Nutzerverwaltung","Nutzer {} ist noch keiner Gruppe zugefügt".format(user), "sendungsregister@leibniz-fli.de",[tec_admin_mail])
+    admin_mail = getattr(settings, "ADMIN_EMAIL", None)
+    send_mail("Sendungsregister Nutzerverwaltung","Nutzer {} ist noch keiner Gruppe zugefügt".format(user), "sendungsregister@leibniz-fli.de",[admin_mail])
 
 
 @login_required
