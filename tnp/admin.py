@@ -1,7 +1,9 @@
 from django.contrib import admin
-from .models import Profile, Dataset, Lab, Address, Unit, Disposal_type,Specie,Material
+from .models import Profile, Dataset, Lab, Address, Unit, Disposal_type,Specie,Material, Address
 from simple_history.admin import SimpleHistoryAdmin 
 from import_export.admin import ImportExportModelAdmin, ImportMixin, ExportMixin, ImportExportActionModelAdmin, ImportExportMixin
+from import_export import fields, resources
+from import_export.widgets import ForeignKeyWidget
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
@@ -32,7 +34,51 @@ class AddressAdmin(admin.ModelAdmin):
 class Disposal_typeAdmin(admin.ModelAdmin):
     search_fields = ('name','street','postal_code','city')
 
+class DatasetExportResource(resources.ModelResource):
+    material__name = fields.Field(attribute='material__name', column_name='Material')
+    specie__name = fields.Field(attribute='specie__name', column_name='Tierart')
+    category = fields.Field(attribute='category', column_name='Kategorie')
+    amount = fields.Field(attribute='amount', column_name='Anzahl / Menge')
+    unit__name = fields.Field(attribute='unit__name', column_name='Einheit')
+    added_by__username = fields.Field(attribute='added_by__username', column_name='Zugefügt von')
+    lab__name = fields.Field(attribute='lab__name', column_name='Gruppe/Lab')
+    creation_date = fields.Field(attribute='creation_date', column_name='Erstellungsdatum')
+    status = fields.Field(attribute='status', column_name='Status')
+    sender = fields.Field(attribute='sender', column_name='Absender')
+    recipient = fields.Field(attribute='recipient', column_name='Empfänger')
+    class Meta:
+        model = Dataset
+        fields = ('material__name','specie__name','category','amount','unit__name','added_by__username','creation_date','status','lab__name','sender','recipient')
+        export_order = ('material__name','specie__name','category','amount','unit__name','added_by__username','lab__name','creation_date','status','sender','recipient')
+
+    def dehydrate_status(self, dataset):
+        status = getattr(dataset, "status", "unknown")
+        if status == 'c':
+            status = 'closed'
+        elif status == 'o':
+            status = 'open'
+        return status
+
+    def dehydrate_sender(self, dataset):
+        sender_name = getattr(dataset.sender, "name", "")
+        sender_street = getattr(dataset.sender, "street", "")
+        sender_plz = getattr(dataset.sender, "postal_code", "")
+        sender_city = getattr(dataset.sender, "city", "")
+        sender_country = getattr(dataset.sender, "country", "")
+        return '%s, %s, %s %s, %s ' % (sender_name, sender_street, sender_plz, sender_city, sender_country)
+
+    def dehydrate_recipient(self, dataset):
+        recipient_name = getattr(dataset.recipient, "name", "")
+        recipient_street = getattr(dataset.recipient, "street", "")
+        recipient_plz = getattr(dataset.recipient, "postal_code", "")
+        recipient_city = getattr(dataset.recipient, "city", "")
+        recipient_country = getattr(dataset.recipient, "country", "")
+        return '%s, %s, %s %s, %s ' % (recipient_name, recipient_street, recipient_plz, recipient_city, recipient_country)
+
+
 @admin.register(Dataset)
 class DatasetAdmin(ExportMixin, SimpleHistoryAdmin):
-    list_display = ('material','specie','category','amount','unit','point_of_origin','added_by','lab','creation_date','status')
+    list_display = ('pk','material','specie','category','amount','unit','point_of_origin','added_by','lab','creation_date','status')
     search_fields = ('material__name','specie__name','disposal_type__name','lab__name')
+    def get_export_resource_class(self):
+        return DatasetExportResource
