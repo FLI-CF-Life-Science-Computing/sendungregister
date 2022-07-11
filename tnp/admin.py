@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import Profile, Dataset, Lab, Address, Unit, Disposal_type,Specie,Material
 from simple_history.admin import SimpleHistoryAdmin 
-
+from import_export.admin import ImportExportModelAdmin, ImportMixin, ExportMixin, ImportExportActionModelAdmin, ImportExportMixin
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
@@ -33,6 +33,6 @@ class Disposal_typeAdmin(admin.ModelAdmin):
     search_fields = ('name','street','postal_code','city')
 
 @admin.register(Dataset)
-class DatasetAdmin(SimpleHistoryAdmin):
+class DatasetAdmin(ExportMixin, SimpleHistoryAdmin):
     list_display = ('material','specie','category','amount','unit','point_of_origin','added_by','lab','creation_date','status')
     search_fields = ('material__name','specie__name','disposal_type__name','lab__name')

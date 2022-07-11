@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'django_admin_listfilter_dropdown',
     'widget_tweaks',
     'simple_history',
+    'import_export',
 ]
 
 MIDDLEWARE = [
