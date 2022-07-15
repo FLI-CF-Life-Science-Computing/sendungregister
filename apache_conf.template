@@ -1,0 +1,27 @@
+<VirtualHost *:80>
+
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/html
+        ServerName sendungsregister.test
+
+        Alias /static/ /var/www/sendungsregister/static_collected/
+
+        WSGIDaemonProcess sendungsregister python-path=/var/www/sendungsregister python-home=/var/www/sendungsregister
+        WSGIProcessGroup sendungsregister
+        WSGIScriptAlias / /var/www/sendungsregister/sendungsregister/wsgi.py
+
+        <Directory /var/www/sendungsregister/sendungsregister>
+           Options FollowSymLinks
+           <Files wsgi.py>
+                 Require all granted
+           </Files>
+        </Directory>
+
+        <Directory /var/www/sendungsregister/static>
+          Require all granted
+        </Directory>
+        LogLevel info
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+</VirtualHost>
