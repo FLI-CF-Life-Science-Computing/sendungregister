@@ -17,6 +17,12 @@ Technischer Ansprechpartner: Fabian Monheim (CF Life Science Computing), <fabian
 
 Inhaltlicher Ansprechpartner: [Tierhausleitung](https://www.leibniz-fli.de/de/forschung/wissenschaftliche-serviceeinrichtungen/cf-animal-facilities)
 
+
+Installation
+============
+Die Installation wurde auf einem Ubuntuserver 22.04 mittels des Scripts install.sh getestet. Vorher müssen die Systemvariablen innerhalb des Scripts angepasst werden.
+Das Script kann als Hilfe zur Installation auf anderen Betriebssystemen dienen.
+
 Lizenz
 =======
 Die Software wurde am Leibniz-Institut für Alternsforschung - Fritz
