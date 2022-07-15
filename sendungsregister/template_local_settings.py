@@ -1,8 +1,8 @@
 import os
 
 EMAIL_HOST = '127.0.0.1'
-SECRET_KEY = 'dfjie583093aesdfR5'
-ALLOWED_HOSTS = ['127.0.0.1', ]
+SECRET_KEY = '%SECRET_KEY%'
+ALLOWED_HOSTS = ['127.0.0.1','%HOST%']
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "static_collected")
