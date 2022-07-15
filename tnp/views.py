@@ -1,3 +1,4 @@
+from cgitb import text
 import profile
 from django.shortcuts import render, redirect, get_object_or_404
 from datetime import datetime, timedelta, date
@@ -12,25 +13,29 @@ from .filters import DatasetFilter
 from .forms import AddDatasetForm, MaterialForm, AddressForm, DatasetEditForm
 from django.views import generic
 
-
+# inform it nerd about bad programming code. A 
 def send_info_mail_to_tec_admin(e,procedure):
     tec_admin_mail = getattr(settings, "TEC_ADMIN_EMAIL", None)
-    send_mail("Error Sendungsregister","Sendungsregister error {} in procedure {} in line {} ".format(e,procedure,sys.exc_info()[2].tb_lineno) , "sendungsregister@leibniz-fli.de",[tec_admin_mail])
+    if tec_admin_mail:
+        send_mail("Error Sendungsregister","Sendungsregister error {} in procedure {} in line {} ".format(e,procedure,sys.exc_info()[2].tb_lineno) , "sendungsregister@leibniz-fli.de",[tec_admin_mail])
 
+# Notify a manager of a new user so he/she can assign the new user to a lab
 def send_info_mail_about_new_user(user):
     admin_mail = getattr(settings, "ADMIN_EMAIL", None)
-    send_mail("Sendungsregister Nutzerverwaltung","Nutzer {} ist noch keiner Gruppe zugefügt".format(user), "sendungsregister@leibniz-fli.de",[admin_mail])
+    if admin_mail:
+        send_mail("Sendungsregister Nutzerverwaltung","Nutzer {} ist noch keiner Gruppe zugefügt".format(user), "sendungsregister@leibniz-fli.de",[admin_mail])
 
 
+# main start page
 @login_required
 def overview(request):
     try:
         profile = get_object_or_404(Profile, user=request.user)
         if profile.lab:
-            if profile.lab.name == "Admin":
-                entries = Dataset.objects.all().filter(status='o').order_by('creation_date')
+            if profile.lab.name == "Admin": # All members of the Admin group can see all datasets
+                entries = Dataset.objects.all().filter(status='o').order_by('creation_date') # list only datasets with the status open
             else:
-                entries = Dataset.objects.filter(lab=profile.lab).filter(status='o').order_by('creation_date')
+                entries = Dataset.objects.filter(lab=profile.lab).filter(status='o').order_by('creation_date') # the user can only see datasets from their own lab
             f = DatasetFilter(request.GET, queryset=entries)
             return render(request, 'home.html', {'filter': f})
         else:
@@ -42,15 +47,16 @@ def overview(request):
         messages.error(request, 'Error: {}'.format(e))
         return HttpResponseRedirect('/')  # Redirect after POST
 
+# lists all entries that have the status closed
 @login_required
 def historyView(request):
     try:
         profile = get_object_or_404(Profile, user=request.user)
         if profile.lab:
-            if profile.lab.name == "Admin":
-                entries = Dataset.objects.filter(status='c').order_by('creation_date')
+            if profile.lab.name == "Admin": # All members of the Admin group can see all datasets
+                entries = Dataset.objects.filter(status='c').order_by('creation_date') # list only datasets with the status closed
             else:
-                entries = Dataset.objects.filter(lab=profile.lab).filter(status='c').order_by('creation_date')
+                entries = Dataset.objects.filter(lab=profile.lab).filter(status='c').order_by('creation_date') # the user can only see datasets from their own lab
             f = DatasetFilter(request.GET, queryset=entries)
             return render(request, 'history.html', {'filter': f})
         else:
@@ -62,6 +68,7 @@ def historyView(request):
         messages.error(request, 'Error: {}'.format(e))
         return HttpResponseRedirect('/')  # Redirect after POST
 
+# creates a new dataset
 @login_required
 def addDataset(request):
     try:
@@ -83,7 +90,7 @@ def addDataset(request):
         messages.error(request, 'Error creating a new dataset {}'.format(e))
         return HttpResponseRedirect('/') 
 
-
+# needed to add new material on the addentry page
 @login_required
 def addMaterialPopup(request):
     try:
@@ -97,6 +104,7 @@ def addMaterialPopup(request):
         messages.error(request, 'Error creating a new Material {}'.format(e))
         return HttpResponseRedirect('/') 
 
+# needed to add a new origin address on the addentry page
 @login_required
 def addAddressOriginPopup(request):
     try:
@@ -110,6 +118,7 @@ def addAddressOriginPopup(request):
         messages.error(request, 'Error creating a new Address {}'.format(e))
         return HttpResponseRedirect('/') 
 
+# needed to add a new sender address on the addentry page
 @login_required
 def addAddressSenderPopup(request):
     try:
@@ -124,6 +133,7 @@ def addAddressSenderPopup(request):
         return HttpResponseRedirect('/') 
 
 
+# needed to add a new recipient address on the addentry page
 @login_required
 def addAddressRecipientPopup(request):
     try:
@@ -137,13 +147,13 @@ def addAddressRecipientPopup(request):
         messages.error(request, 'Error creating a new Address {}'.format(e))
         return HttpResponseRedirect('/') 
 
+ # used to edit a dataset
 @login_required
 def editDatasetView(request, primary_key):
     try:
         profile = get_object_or_404(Profile, user=request.user)
         dataset = get_object_or_404(Dataset, pk=primary_key)
-        if dataset.lab == profile.lab or profile.lab.name == 'Admin':
-            #form = DatasetEditForm(request.POST or None)
+        if dataset.lab == profile.lab or profile.lab.name == 'Admin': # The admin can edit all datasets. A normal user only datasets from their lab 
             if request.method == 'POST':
                 form = DatasetEditForm(request.POST, instance=dataset)
                 if form.is_valid():
@@ -154,7 +164,6 @@ def editDatasetView(request, primary_key):
                     messages.error(request, 'Form is invalid. Please check your values: {}'.format(form.errors))
                     return render(request, 'tnp/dataset_edit_form.html', {'form': DatasetEditForm(instance=dataset),'pk':dataset.pk})
             return render(request, 'tnp/dataset_edit_form.html', {'form': DatasetEditForm(instance=dataset),'pk':dataset.pk})
-            #return HttpResponse('<script>opener.closePopup(window, "{}", "{}", "#id_recipient");</script>'.format(instance.pk, instance))
         else:
             messages.error(request, 'You don\'t have the permission to edit this dataset')
             return HttpResponseRedirect('/') 

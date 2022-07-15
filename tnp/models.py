@@ -7,7 +7,7 @@ from simple_history.models import HistoricalRecords
 from django.core.mail import send_mail
 
 
-class Lab(models.Model):
+class Lab(models.Model): # the lab / group every user is mapped to
 
     name = models.CharField(max_length=200)
     status = models.CharField(max_length=50, choices=(
@@ -17,7 +17,7 @@ class Lab(models.Model):
     def __str__(self):
         return self.name + ' Lab'
 
-class Material(models.Model):
+class Material(models.Model): # the type of material like skin, blood, eggs, saliva
 
     name = models.CharField(max_length=200)
     status = models.CharField(max_length=50, choices=(
@@ -45,7 +45,7 @@ class Material(models.Model):
     def __str__(self):
         return self.name
 
-class Specie(models.Model):
+class Specie(models.Model): # specie like mouse, water fleas, beef
     name = models.CharField(max_length=200)
     status = models.CharField(max_length=50, choices=(
         ('active', 'active'),
@@ -54,7 +54,7 @@ class Specie(models.Model):
     def __str__(self):
         return self.name
 
-class Unit(models.Model):
+class Unit(models.Model): # Unit like ml, mg, g, pieces,...
     name = models.CharField(max_length=200)
     status = models.CharField(max_length=50, choices=(
         ('active', 'active'),
@@ -62,14 +62,6 @@ class Unit(models.Model):
         ),default='active')
     def __str__(self):
         return self.name
-
-#class Address(models.Model):
-#    name        = models.CharField(max_length=30)
-#    street      = models.CharField(max_length=200)
-#    postal_code = models.CharField(max_length=10)
-#    city        = models.CharField(max_length=30)
-#    def __str__(self):
-#        return self.name
 
 class Address(models.Model):
     name        = models.CharField(max_length=200, help_text='Name')
@@ -82,7 +74,6 @@ class Address(models.Model):
         ('deactivated', 'deactivated'),
         ),default='active')
     history = HistoricalRecords()
-    #address = models.ForeignKey(Address, null=False, on_delete=models.CASCADE)
 
     @property
     def _history_user(self):
@@ -96,7 +87,7 @@ class Address(models.Model):
         return "{}, {}, {}, {}".format(self.name,self.street,self.postal_code,self.city)
 
 
-class Disposal_type(models.Model):
+class Disposal_type(models.Model): # the way how the material was disposed like steam autoclaving or incineration 
     name = models.CharField(max_length=200)
     status = models.CharField(max_length=50, choices=(
         ('active', 'active'),
@@ -105,7 +96,7 @@ class Disposal_type(models.Model):
     def __str__(self):
         return self.name
 
-class Dataset(models.Model):
+class Dataset(models.Model): # this is the main class. 
     material            = models.ForeignKey(Material, null=False, blank=False, help_text='Material', on_delete=models.CASCADE)
     specie              = models.ForeignKey(Specie, null=False, blank=False, help_text='Tierart', on_delete=models.CASCADE)
     category            = models.CharField(max_length=2, help_text='Kategorie', choices=(
@@ -146,18 +137,14 @@ class Dataset(models.Model):
         self.changed_by = value
     
 
-class Profile(models.Model):
+class Profile(models.Model): # Every user will be mapped to lab / group
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     lab  = models.ForeignKey(Lab, null=True, on_delete=models.CASCADE)
     def __str__(self):
         return self.user.username
 
-class Book(models.Model):
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    co_authors = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='co_authored_by')
 
-
-@receiver(post_save, sender=User)
+@receiver(post_save, sender=User) # For every new user a profile will be created
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)

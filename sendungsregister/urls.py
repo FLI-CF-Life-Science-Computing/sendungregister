@@ -27,16 +27,16 @@ from tnp import autocompleteviews
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', tnp.views.overview, name='startview'),
-    path('history/', tnp.views.historyView, name='history'),
-    path('addentry/', tnp.views.addDataset, name='addDataset'),
+    path('history/', tnp.views.historyView, name='history'), # lists all entries that have the status closed
+    path('addentry/', tnp.views.addDataset, name='addDataset'),# creates a new dataset
     path('accounts/', include('django.contrib.auth.urls')),
-    path('edit/<int:primary_key>', tnp.views.editDatasetView, name="editDataset"),
-    re_path(r'^create/material', login_required(tnp.views.addMaterialPopup), name = "addMaterial"),
-    re_path(r'^create/sender_address', login_required(tnp.views.addAddressSenderPopup), name = "addAddressSender"),
-    re_path(r'^create/origin_address', login_required(tnp.views.addAddressOriginPopup), name = "addAddressOrigin"),
-    re_path(r'^create/recipient_address', login_required(tnp.views.addAddressRecipientPopup), name = "addAddressRecipient"),
+    path('edit/<int:primary_key>', tnp.views.editDatasetView, name="editDataset"), # used to edit a dataset
+    re_path(r'^create/material', login_required(tnp.views.addMaterialPopup), name = "addMaterial"), # needed to add new material on the addentry page
+    re_path(r'^create/sender_address', login_required(tnp.views.addAddressSenderPopup), name = "addAddressSender"), # needed to add a new sender address on the addentry page
+    re_path(r'^create/origin_address', login_required(tnp.views.addAddressOriginPopup), name = "addAddressOrigin"), # needed to add a new origin address on the addentry page
+    re_path(r'^create/recipient_address', login_required(tnp.views.addAddressRecipientPopup), name = "addAddressRecipient"), # needed to add a new recipient address on the addentry page
     #re_path(r'^address-autocomplete/$', autocomplete.Select2QuerySetView.as_view(model=Address), name = "address-autocomplete"),
     #re_path(r'^address-autocomplete/$', autocompleteviews.AddressAutocomplete.as_view(), name = "address-autocomplete"),
-    path("select2/", include("django_select2.urls")),
-    path("dataset/create", login_required(views.DatasetCreateView.as_view()), name="dataset-create"),
+    path("select2/", include("django_select2.urls")), # needed for the select2 function (addentry page)
+    path("dataset/create", login_required(views.DatasetCreateView.as_view()), name="dataset-create"), # it creates finally a new dataset
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
