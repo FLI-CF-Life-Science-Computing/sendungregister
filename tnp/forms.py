@@ -1,6 +1,6 @@
 from unicodedata import category
 from django import forms
-from .models import Address, Dataset, Material, Book, Specie, Unit
+from .models import Address, Dataset, Material, Specie, Unit
 from django.core.files.uploadedfile import SimpleUploadedFile
 from datetime import datetime
 from django.contrib.auth.models import User
