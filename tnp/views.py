@@ -30,12 +30,14 @@ def send_info_mail_about_new_user(user):
 @login_required
 def overview(request):
     try:
+        end_date = datetime.date(datetime.today())
+        start_date = end_date - timedelta(days=365*2)
         profile = get_object_or_404(Profile, user=request.user)
         if profile.lab:
             if profile.lab.name == "Admin": # All members of the Admin group can see all datasets
-                entries = Dataset.objects.all().filter(status='o').order_by('creation_date') # list only datasets with the status open
+                entries = Dataset.objects.all().filter(creation_date__range=(start_date, end_date)).order_by('-status','creation_date') # list only datasets with the status open
             else:
-                entries = Dataset.objects.filter(lab=profile.lab).filter(status='o').order_by('creation_date') # the user can only see datasets from their own lab
+                entries = Dataset.objects.filter(creation_date__range=(start_date, end_date)).filter(lab=profile.lab).order_by('-status','creation_date') # the user can only see datasets from their own lab
             f = DatasetFilter(request.GET, queryset=entries)
             return render(request, 'home.html', {'filter': f})
         else:

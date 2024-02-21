@@ -24,6 +24,8 @@ class AddDatasetForm(forms.ModelForm):
     material = forms.ModelChoiceField(queryset=Material.objects.filter(status='active').order_by('name'))
     specie = forms.ModelChoiceField(queryset=Specie.objects.filter(status='active').order_by('name'))
     unit = forms.ModelChoiceField(queryset=Unit.objects.filter(status='active').order_by('name'))
+    import_date = forms.DateField(input_formats=['%d/%m/%Y'],required=False, help_text='Importdatum')
+    field_order = ['material','article_number', 'specie', 'category','unit','amount','point_of_origin','sender','recipient','import_date','prospective_date_of_disposal','date_of_disposal','disposal_type']
 
     def __init__(self,*args,**kwargs):
         super (AddDatasetForm,self ).__init__(*args,**kwargs) # populates the post
@@ -69,7 +71,8 @@ class AddressForm(forms.ModelForm):
 class DatasetEditForm(forms.ModelForm):
     reminder_disposal = forms.DateField(widget=forms.widgets.DateInput(format="%d/%m/%Y"),input_formats=['%d/%m/%Y'],required=False, help_text='Datum für Erinnerungsmail zum Eintragen des Entsorgungsdatum')
     date_of_disposal     = forms.DateField(widget=forms.widgets.DateInput(format="%d/%m/%Y"),input_formats=['%d/%m/%Y'],required=False, help_text='Entsorgungsdatum')
-    field_order = ['material', 'specie', 'category','unit','amount','point_of_origin','sender','recipient','prospective_date_of_disposal','date_of_disposal','disposal_type']
+    import_date     = forms.DateField(widget=forms.widgets.DateInput(format="%d/%m/%Y"),input_formats=['%d/%m/%Y'],required=False, help_text='Importdatum')
+    field_order = ['material','article_number', 'specie', 'category','unit','amount','point_of_origin','sender','recipient','import_date','prospective_date_of_disposal','date_of_disposal','disposal_type']
     def __init__(self,*args,**kwargs):
         super (DatasetEditForm,self ).__init__(*args,**kwargs) # populates the post
         self.fields['material'].queryset = Material.objects.filter(status="active").order_by('name')

@@ -62,7 +62,7 @@
             <td>{{f.sender}}</td>
             <td>{{f.recipient}}</td>
             <td>{{f.date_of_disposal|date:'d.m.Y'}} | {{f.disposal_type}}</td>
-            <td>{{f.added_by}}</td>
+            <td>{{f.added_by.first_name}} {{f.added_by.last_name}} ({{f.added_by.profile.lab}})</td>
             <td>{{f.creation_date|date:'d.m.Y'}}</td>
           </tr>
           {% endfor %}

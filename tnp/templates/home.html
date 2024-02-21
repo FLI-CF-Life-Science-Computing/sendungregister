@@ -7,10 +7,10 @@
       "searching": true,
       "scrollX": false,
       "scrollY": "500px",
-      "order": [[0, 'desc']],
+      
       "scrollCollapse": true,
       "paging": true,
-      "pageLength": 25,
+      "pageLength": 100,
       "fixedHeader": true, 
     });
   });
@@ -48,6 +48,7 @@
           <th class="header"> Name / Address Recipient/User</th>
           <th class="header"> Added By</th>
           <th class="header"> Date Added</th>
+          <th class="header"> Status</th>
           <th class="header"></th>
           </tr>
         </thead>
@@ -61,8 +62,9 @@
             <td>{{f.point_of_origin}}</td>
             <td>{{f.sender}}</td>
             <td>{{f.recipient}}</td>
-            <td>{{f.added_by}}</td>
+            <td>{{f.added_by.first_name}} {{f.added_by.last_name}} ({{f.added_by.profile.lab}})</td>
             <td>{{f.creation_date|date:'d.m.Y'}}</td>
+            <td>{% if f.status == 'o' %} open {% else %} closed {% endif %}</td>
             <td><a href="/edit/{{f.pk}}">Edit</a></td>
           </tr>
           {% endfor %}

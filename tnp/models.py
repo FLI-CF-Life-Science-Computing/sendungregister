@@ -109,11 +109,13 @@ class Dataset(models.Model): # this is the main class.
     point_of_origin     = models.ForeignKey(Address, null=False, blank=False, on_delete=models.CASCADE, help_text='Herstellungsort', related_name='origin_address')
     sender              = models.ForeignKey(Address, null=False, blank=False, on_delete=models.CASCADE, help_text='Absender', related_name='sender_address')
     recipient           = models.ForeignKey(Address, null=False, blank=False, on_delete=models.CASCADE, help_text='Empfänger', related_name='recipient_address')
-    reminder_disposal = models.DateField(null=True, blank=True)
+    article_number      = models.CharField(max_length=200, null=True, blank=True, help_text='Artikel-/Produktnummer')
+    reminder_disposal   = models.DateField(null=True, blank=True)
     date_of_disposal    = models.DateField(null=True, blank=True, help_text='Entsorgungsdatum')
     disposal_type       = models.ForeignKey(Disposal_type, null=True, blank=True, help_text='Entsorgungsart', on_delete=models.CASCADE)
     added_by            = models.ForeignKey(User, null=False, blank=False, on_delete=models.CASCADE)
     creation_date       = models.DateTimeField(null=False, auto_now_add=True)
+    import_date       = models.DateField(null=True, blank=True, help_text='Importdatum')
     lab                 = models.ForeignKey(Lab, null=False, blank=False, on_delete=models.CASCADE)
     status              = models.CharField(max_length=2, choices=(
         ('o', 'open'),
@@ -138,7 +140,7 @@ class Dataset(models.Model): # this is the main class.
     
 
 class Profile(models.Model): # Every user will be mapped to lab / group
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, related_name='profile', on_delete=models.CASCADE)
     lab  = models.ForeignKey(Lab, null=True, on_delete=models.CASCADE)
     def __str__(self):
         return self.user.username

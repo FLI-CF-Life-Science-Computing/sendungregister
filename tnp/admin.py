@@ -35,7 +35,9 @@ class Disposal_typeAdmin(admin.ModelAdmin):
     search_fields = ('name','street','postal_code','city')
 
 class DatasetExportResource(resources.ModelResource):
+    pk = fields.Field(attribute='pk', column_name='ID')
     material__name = fields.Field(attribute='material__name', column_name='Material')
+    article_number = fields.Field(attribute='article_number', column_name='Artikel-/Produktnummer')
     specie__name = fields.Field(attribute='specie__name', column_name='Tierart')
     category = fields.Field(attribute='category', column_name='Kategorie')
     amount = fields.Field(attribute='amount', column_name='Anzahl / Menge')
@@ -43,13 +45,14 @@ class DatasetExportResource(resources.ModelResource):
     added_by__username = fields.Field(attribute='added_by__username', column_name='Zugefügt von')
     lab__name = fields.Field(attribute='lab__name', column_name='Gruppe/Lab')
     creation_date = fields.Field(attribute='creation_date', column_name='Erstellungsdatum')
+    import_date = fields.Field(attribute='import_date', column_name='Importdatum')
     status = fields.Field(attribute='status', column_name='Status')
     sender = fields.Field(attribute='sender', column_name='Absender')
     recipient = fields.Field(attribute='recipient', column_name='Empfänger')
     class Meta:
         model = Dataset
-        fields = ('material__name','specie__name','category','amount','unit__name','added_by__username','creation_date','status','lab__name','sender','recipient')
-        export_order = ('material__name','specie__name','category','amount','unit__name','added_by__username','lab__name','creation_date','status','sender','recipient')
+        fields = ('pk','material__name','article_number','specie__name','category','amount','unit__name','import_date','added_by__username','creation_date','status','lab__name','sender','recipient')
+        export_order = ('pk','material__name','specie__name','category','amount','unit__name','import_date','added_by__username','lab__name','creation_date','status','sender','recipient')
 
     def dehydrate_status(self, dataset):
         status = getattr(dataset, "status", "unknown")
@@ -78,7 +81,7 @@ class DatasetExportResource(resources.ModelResource):
 
 @admin.register(Dataset)
 class DatasetAdmin(ExportMixin, SimpleHistoryAdmin):
-    list_display = ('pk','material','specie','category','amount','unit','point_of_origin','added_by','lab','creation_date','status')
+    list_display = ('pk','material', 'article_number','specie','category','amount','unit','point_of_origin','import_date','added_by','lab','creation_date','status')
     search_fields = ('material__name','specie__name','disposal_type__name','lab__name')
     def get_export_resource_class(self):
         return DatasetExportResource
