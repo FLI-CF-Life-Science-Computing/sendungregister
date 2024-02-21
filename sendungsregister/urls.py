@@ -28,7 +28,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', tnp.views.overview, name='startview'),
     path('history/', tnp.views.historyView, name='history'), # lists all entries that have the status closed
-    path('addentry/', tnp.views.addDataset, name='addDataset'),# creates a new dataset
+    #path('addentry/', tnp.views.addDataset, name='addDataset'),# creates a new dataset
     path('accounts/', include('django.contrib.auth.urls')),
     path('edit/<int:primary_key>', tnp.views.editDatasetView, name="editDataset"), # used to edit a dataset
     re_path(r'^create/material', login_required(tnp.views.addMaterialPopup), name = "addMaterial"), # needed to add new material on the addentry page

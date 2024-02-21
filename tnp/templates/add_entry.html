@@ -22,11 +22,13 @@
 {% endblock %}
 
 {% block content %}
-<h1 class="text-center"> FLI Sendungsregister - New Entry</h1>
+<h1 class="text-center"> FLI Sendungsregister - New Entry1</h1>
 <form  enctype="multipart/form-data" action="/addapplication/" method="post">
 <table>
     {% csrf_token %}
-    {{form|crispy}}
+    {% autoescape off %}
+    {{form|crispy|safe}}
+    {% endautoescape %}
 </table>
 <section class="section">
 <input type="submit" value="Submit" class="btn btn-primary">

@@ -30,6 +30,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
+
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # Application definition
@@ -51,6 +53,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'simple_history',
     'import_export',
+    'crispy_bootstrap4',
 ]
 
 MIDDLEWARE = [

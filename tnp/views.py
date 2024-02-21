@@ -71,7 +71,7 @@ def historyView(request):
         return HttpResponseRedirect('/')  # Redirect after POST
 
 # creates a new dataset
-@login_required
+"""@login_required
 def addDataset(request):
     try:
         if request.method == 'POST':  # If the form has been submitted...
@@ -91,7 +91,7 @@ def addDataset(request):
         send_info_mail_to_tec_admin(e,"addDataset")
         messages.error(request, 'Error creating a new dataset {}'.format(e))
         return HttpResponseRedirect('/') 
-
+"""
 # needed to add new material on the addentry page
 @login_required
 def addMaterialPopup(request):
