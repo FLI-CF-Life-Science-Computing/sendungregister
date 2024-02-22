@@ -6,6 +6,7 @@ from datetime import datetime
 from django.contrib.auth.models import User
 from django_select2 import forms as s2forms
 from html import escape
+from django.core.exceptions import ValidationError
 
 
 class AddressWidget(s2forms.ModelSelect2Widget):
@@ -72,6 +73,17 @@ class AddressForm(forms.ModelForm):
     class Meta:
         model = Address
         exclude = ('status',)
+    def clean(self):
+        cleaned_data = super().clean()
+        commercial = cleaned_data.get("commercial")
+        if commercial == False:
+            street = cleaned_data.get("street")      
+            plz = cleaned_data.get("postal_code")
+            city = cleaned_data.get("city")
+            if street==None or plz==None or city==None:
+                raise ValidationError(
+                    "Bitte gib eine Adresse ein"
+                )
 
 
 class DatasetEditForm(forms.ModelForm):

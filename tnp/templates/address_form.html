@@ -9,4 +9,35 @@
 		<input type="submit" value = "Submit" />
 	</form>
 </div>
+<script>
+	checkbox = document.getElementById("id_commercial");
+	checkbox.addEventListener('change', (event) => {
+		if (event.currentTarget.checked) {
+			street = document.getElementById("id_street");
+			street.removeAttribute("required");
+			
+			document.querySelector("label[for='id_street']").textContent = 'Street';
+
+			plz = document.getElementById("id_postal_code");
+			plz.removeAttribute("required");
+			document.querySelector("label[for='id_postal_code']").textContent = 'Postal code';
+
+			city = document.getElementById("id_city");
+			city.removeAttribute("required");
+			document.querySelector("label[for='id_city']").textContent = 'City';
+		} else {
+			street = document.getElementById("id_street");
+			street.setAttribute("required","");
+			document.querySelector("label[for='id_street']").textContent = 'Street*';
+
+			plz = document.getElementById("id_postal_code");
+			plz.setAttribute("required","");
+			document.querySelector("label[for='id_postal_code']").textContent = 'Postal code*';
+
+			city = document.getElementById("id_city");
+			city.setAttribute("required","")
+			document.querySelector("label[for='id_city']").textContent = 'City*';
+		}
+		})
+</script>
 {% endblock %}

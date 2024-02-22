@@ -65,10 +65,11 @@ class Unit(models.Model): # Unit like ml, mg, g, pieces,...
 
 class Address(models.Model):
     name        = models.CharField(max_length=200, help_text='Name')
-    street      = models.CharField(max_length=200, help_text='Straße')
-    postal_code = models.CharField(max_length=10, help_text='PLZ')
-    city        = models.CharField(max_length=30, help_text='Stadt')
-    country     = models.CharField(max_length=30, help_text='Land', default='Deutschland')
+    commercial  = models.BooleanField(default=True, help_text='Kommerzielle Einrichtung')
+    street      = models.CharField(max_length=200, null=True, blank=True,  help_text='Straße')
+    postal_code = models.CharField(max_length=10, null=True, blank=True,  help_text='PLZ')
+    city        = models.CharField(max_length=30, null=True, blank=True,  help_text='Stadt')
+    country     = models.CharField(max_length=30, null=True, blank=True,  help_text='Land', default='Deutschland')
     status = models.CharField(max_length=50, choices=(
         ('active', 'active'),
         ('deactivated', 'deactivated'),
@@ -84,7 +85,14 @@ class Address(models.Model):
         self.changed_by = value
 
     def __str__(self):
-        return "{}, {}, {}, {}".format(self.name,self.street,self.postal_code,self.city)
+        address = self.name
+        if self.street:
+            address = "{}, {}".format(address, self.street)
+        if self.postal_code:
+            address = "{}, {}".format(address, self.postal_code)
+        if self.city:
+            address = "{}, {}".format(address, self.city)
+        return address
 
 
 class Disposal_type(models.Model): # the way how the material was disposed like steam autoclaving or incineration 
