@@ -39,10 +39,14 @@
       $("#id_reminder_disposal").datetimepicker({
         format: 'd/m/Y',
         timepicker:false,
+        scrollMonth : false,
+	      scrollInput : false
       });
       $("#id_import_date").datetimepicker({
         format: 'd/m/Y',
         timepicker:false,
+        scrollMonth : false,
+	      scrollInput : false
       });
       document.querySelector("label[for='id_material']").textContent = 'Material*';
       link= document.querySelector("label[for='id_material']").appendChild(document.createElement("a"));
