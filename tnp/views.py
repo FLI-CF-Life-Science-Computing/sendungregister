@@ -35,7 +35,7 @@ def overview(request):
         profile = get_object_or_404(Profile, user=request.user)
         if profile.lab:
             if profile.lab.name == "Admin": # All members of the Admin group can see all datasets
-                entries = Dataset.objects.all().filter(creation_date__range=(start_date, end_date)).order_by('-status','creation_date') # list only datasets with the status open
+                entries = Dataset.objects.all().filter(creation_date__range=(start_date, end_date)).order_by('-status','-creation_date') # list only datasets with the status open
             else:
                 entries = Dataset.objects.filter(creation_date__range=(start_date, end_date)).filter(lab=profile.lab).order_by('-status','creation_date') # the user can only see datasets from their own lab
             f = DatasetFilter(request.GET, queryset=entries)
