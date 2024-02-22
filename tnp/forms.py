@@ -32,26 +32,26 @@ class AddDatasetForm(forms.ModelForm):
         super (AddDatasetForm,self ).__init__(*args,**kwargs) # populates the post
         self.fields['material'].queryset = Material.objects.filter(status="active").order_by('name')
         link_to_add_new_material ='<a href="/create/material" id="add_material" onclick="return showAddPopup(this);"><img src = "/static/admin/img/icon-addlink.svg"></a>'
-        self.fields['material'].label = "Material  {}".format(link_to_add_new_material)
+        #self.fields['material'].label = "Material  {}".format(link_to_add_new_material)
         self.fields['material'].label = "Material"
 
         self.fields['point_of_origin'].queryset = Address.objects.filter(status="active").order_by('name')
         link_to_add_new_address = '<a href="/create/origin_address" id="add_address" onclick="return showAddPopup(this);"><img src = "/static/admin/img/icon-addlink.svg"></a>'
-        self.fields['point_of_origin'].label = "Point of origin {}".format(link_to_add_new_address)
+        #self.fields['point_of_origin'].label = "Point of origin {}".format(link_to_add_new_address)
         self.fields['point_of_origin'].label = "Point of origin"
 
         self.fields['sender'].queryset = Address.objects.filter(status="active").order_by('name')
         link_to_add_new_address = '<a href="/create/sender_address" id="add_sender" onclick="return showAddPopup(this);"><img src = "/static/admin/img/icon-addlink.svg"></a>'
-        self.fields['sender'].label = "Sender {}".format(link_to_add_new_address)
+        #self.fields['sender'].label = "Sender {}".format(link_to_add_new_address)
         self.fields['sender'].label = "Sender"
 
         self.fields['recipient'].queryset = Address.objects.filter(status="active").order_by('name')
         link_to_add_new_address = '<a href="/create/recipient_address" id="add_recipient" onclick="return showAddPopup(this);"><img src = "/static/admin/img/icon-addlink.svg"></a>'
-        self.fields['recipient'].label = "Recipient {}".format(link_to_add_new_address)
+        #self.fields['recipient'].label = "Recipient {}".format(link_to_add_new_address)
         self.fields['recipient'].label = "Recipient"
 
         link_to_category_definition = '<a href="https://www.bmel.de/DE/themen/tiere/tiergesundheit/tierische-nebenprodukte/tierische-nebenprodukte-kategorie.html" target="_blank">Info</a>'
-        self.fields['category'].label = "Category ({})".format(link_to_category_definition)
+        #self.fields['category'].label = "Category ({})".format(link_to_category_definition)
         self.fields['category'].label = "Category"
 
     class Meta: 
@@ -83,19 +83,23 @@ class DatasetEditForm(forms.ModelForm):
         super (DatasetEditForm,self ).__init__(*args,**kwargs) # populates the post
         self.fields['material'].queryset = Material.objects.filter(status="active").order_by('name')
         link_to_add_new_material = '<a href="/create/material" id="add_material" onclick="return showAddPopup(this);"><img src = "/static/admin/img/icon-addlink.svg"></a>'
-        self.fields['material'].label = "Material {}".format(link_to_add_new_material)
+        #self.fields['material'].label = "Material {}".format(link_to_add_new_material)
+        self.fields['material'].label = "Material"
 
         self.fields['point_of_origin'].queryset = Address.objects.filter(status="active").order_by('name')
         link_to_add_new_address = '<a href="/create/origin_address" id="add_address" onclick="return showAddPopup(this);"><img src = "/static/admin/img/icon-addlink.svg"></a>'
-        self.fields['point_of_origin'].label = "Point of origin {}".format(link_to_add_new_address)
+        #self.fields['point_of_origin'].label = "Point of origin {}".format(link_to_add_new_address)
+        self.fields['point_of_origin'].label = "Point of origin"
 
         self.fields['sender'].queryset = Address.objects.filter(status="active").order_by('name')
         link_to_add_new_address = '<a href="/create/sender_address" id="add_sender" onclick="return showAddPopup(this);"><img src = "/static/admin/img/icon-addlink.svg"></a>'
-        self.fields['sender'].label = "Sender {}".format(link_to_add_new_address)
+        #self.fields['sender'].label = "Sender {}".format(link_to_add_new_address)
+        self.fields['sender'].label = "Sender"
 
         self.fields['recipient'].queryset = Address.objects.filter(status="active").order_by('name')
         link_to_add_new_address = '<a href="/create/recipient_address" id="add_recipient" onclick="return showAddPopup(this);"><img src = "/static/admin/img/icon-addlink.svg"></a>'
-        self.fields['recipient'].label = "Recipient {}".format(link_to_add_new_address)
+        #self.fields['recipient'].label = "Recipient {}".format(link_to_add_new_address)
+        self.fields['recipient'].label = "Recipient"
     
     #def __init__(self,*args,**kwargs):
     #    super (DatasetEditForm,self ).__init__(*args,**kwargs)

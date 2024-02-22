@@ -49,6 +49,43 @@
         format: 'd/m/Y',
         timepicker:false,
       });
+      document.querySelector("label[for='id_material']").textContent = 'Material*';
+      link= document.querySelector("label[for='id_material']").appendChild(document.createElement("a"));
+      link.href="/create/material";
+      link.id="add_material";
+      link.onclick = function jsFunc() {return showAddPopup(this);};
+      image = link.appendChild(document.createElement("img"));
+      image.src = "/static/admin/img/icon-addlink.svg";
+
+      document.querySelector("label[for='id_point_of_origin']").textContent = 'Point of origin*';
+      link= document.querySelector("label[for='id_point_of_origin']").appendChild(document.createElement("a"));
+      link.href="/create/origin_address";
+      link.id="add_address";
+      link.onclick = function jsFunc() {return showAddPopup(this);};
+      image = link.appendChild(document.createElement("img"));
+      image.src = "/static/admin/img/icon-addlink.svg";
+
+      document.querySelector("label[for='id_sender']").textContent = 'Sender*';
+      link= document.querySelector("label[for='id_sender']").appendChild(document.createElement("a"));
+      link.href="/create/sender_address";
+      link.id="add_sender";
+      link.onclick = function jsFunc() {return showAddPopup(this);};
+      image = link.appendChild(document.createElement("img"));
+      image.src = "/static/admin/img/icon-addlink.svg";
+
+      document.querySelector("label[for='id_recipient']").textContent = 'Recipient*';
+      link= document.querySelector("label[for='id_recipient']").appendChild(document.createElement("a"));
+      link.href="/create/recipient_address";
+      link.id="add_recipient";
+      link.onclick = function jsFunc() {return showAddPopup(this);};
+      image = link.appendChild(document.createElement("img"));
+      image.src = "/static/admin/img/icon-addlink.svg";
+
+      document.querySelector("label[for='id_category']").textContent = 'Category*';
+      link= document.querySelector("label[for='id_category']").appendChild(document.createElement("a"));
+      link.href="https://www.bmel.de/DE/themen/tiere/tiergesundheit/tierische-nebenprodukte/tierische-nebenprodukte-kategorie.html";
+      link.textContent=" Info"
+      link.target = "_blank"
     });
   </script>
 {{ form.media.js }}
