@@ -106,7 +106,7 @@ class Disposal_type(models.Model): # the way how the material was disposed like 
 
 class Dataset(models.Model): # this is the main class. 
     material            = models.ForeignKey(Material, null=False, blank=False, help_text='Material', on_delete=models.CASCADE)
-    specie              = models.ForeignKey(Specie, null=False, blank=False, help_text='Tierart', on_delete=models.CASCADE)
+    specie              = models.ForeignKey(Specie, null=False, blank=False, verbose_name='species', help_text='Tierart', on_delete=models.CASCADE)
     category            = models.CharField(max_length=2, help_text='Kategorie', choices=(
         ('1', '1 - high risk / hohes Risiko '),
         ('2', '2 - moderate risk / mittleres Risiko'),
@@ -123,7 +123,7 @@ class Dataset(models.Model): # this is the main class.
     disposal_type       = models.ForeignKey(Disposal_type, null=True, blank=True, help_text='Entsorgungsart', on_delete=models.CASCADE)
     added_by            = models.ForeignKey(User, null=False, blank=False, on_delete=models.CASCADE)
     creation_date       = models.DateTimeField(null=False, auto_now_add=True)
-    import_date       = models.DateField(null=True, blank=True, help_text='Importdatum')
+    import_date         = models.DateField(null=True, blank=True, help_text='Importdatum')
     lab                 = models.ForeignKey(Lab, null=False, blank=False, on_delete=models.CASCADE)
     status              = models.CharField(max_length=2, choices=(
         ('o', 'open'),
