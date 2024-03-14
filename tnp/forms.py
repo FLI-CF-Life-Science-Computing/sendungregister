@@ -35,7 +35,7 @@ class AddDatasetForm(forms.ModelForm):
         link_to_add_new_material ='<a href="/create/material" id="add_material" onclick="return showAddPopup(this);"><img src = "/static/admin/img/icon-addlink.svg"></a>'
         #self.fields['material'].label = "Material  {}".format(link_to_add_new_material)
         self.fields['material'].label = "Material"
-
+        self.fields['specie'].label = "Species"
         self.fields['point_of_origin'].queryset = Address.objects.filter(status="active").order_by('name')
         link_to_add_new_address = '<a href="/create/origin_address" id="add_address" onclick="return showAddPopup(this);"><img src = "/static/admin/img/icon-addlink.svg"></a>'
         #self.fields['point_of_origin'].label = "Point of origin {}".format(link_to_add_new_address)
@@ -97,6 +97,7 @@ class DatasetEditForm(forms.ModelForm):
         link_to_add_new_material = '<a href="/create/material" id="add_material" onclick="return showAddPopup(this);"><img src = "/static/admin/img/icon-addlink.svg"></a>'
         #self.fields['material'].label = "Material {}".format(link_to_add_new_material)
         self.fields['material'].label = "Material"
+        self.fields['specie'].label = "Species"
 
         self.fields['point_of_origin'].queryset = Address.objects.filter(status="active").order_by('name')
         link_to_add_new_address = '<a href="/create/origin_address" id="add_address" onclick="return showAddPopup(this);"><img src = "/static/admin/img/icon-addlink.svg"></a>'
