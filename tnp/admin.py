@@ -48,13 +48,13 @@ class DatasetExportResource(resources.ModelResource):
     import_date = fields.Field(attribute='import_date', column_name='Importdatum')
     status = fields.Field(attribute='status', column_name='Status')
     sender = fields.Field(attribute='sender', column_name='Absender')
-    sender_commercial = fields.Field(attribute='sender__commercial', column_name='Kommerzieller Absender')
+    sender__commercial = fields.Field(attribute='sender__commercial', column_name='Kommerzieller Absender')
     recipient = fields.Field(attribute='recipient', column_name='Empfänger')
-    sender_recipient = fields.Field(attribute='recipient__commercial', column_name='Kommerzieller Empfänger')
+    sender__recipient = fields.Field(attribute='recipient__commercial', column_name='Kommerzieller Empfänger')
     class Meta:
         model = Dataset
-        fields = ('pk','material__name','article_number','specie__name','category','amount','unit__name','import_date','added_by__username','creation_date','status','lab__name','sender','sender_commercial','recipient','recipient_commercial')
-        export_order = ('pk','material__name','specie__name','category','amount','unit__name','import_date','added_by__username','lab__name','creation_date','status','sender_commercial','recipient','recipient_commercial')
+        fields = ('pk','material__name','article_number','specie__name','category','amount','unit__name','import_date','added_by__username','creation_date','status','lab__name','sender','sender__commercial','recipient','recipient__commercial')
+        export_order = ('pk','material__name','specie__name','category','amount','unit__name','import_date','added_by__username','lab__name','creation_date','status','sender__commercial','recipient','recipient__commercial')
 
     def dehydrate_status(self, dataset):
         status = getattr(dataset, "status", "unknown")
