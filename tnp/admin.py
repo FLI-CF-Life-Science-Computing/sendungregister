@@ -50,7 +50,7 @@ class DatasetExportResource(resources.ModelResource):
     sender = fields.Field(attribute='sender', column_name='Absender')
     sender__commercial = fields.Field(attribute='sender__commercial', column_name='Kommerzieller Absender')
     recipient = fields.Field(attribute='recipient', column_name='Empfänger')
-    sender__recipient = fields.Field(attribute='recipient__commercial', column_name='Kommerzieller Empfänger')
+    recipient__commercial = fields.Field(attribute='recipient__commercial', column_name='Kommerzieller Empfänger')
     class Meta:
         model = Dataset
         fields = ('pk','material__name','article_number','specie__name','category','amount','unit__name','import_date','added_by__username','creation_date','status','lab__name','sender','sender__commercial','recipient','recipient__commercial')
