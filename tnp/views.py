@@ -31,7 +31,7 @@ def send_info_mail_about_new_user(user):
 def overview(request):
     try:
         end_date = datetime.date(datetime.today()) + timedelta(days=1)
-        start_date = end_date - timedelta(days=365*2)
+        start_date = end_date - timedelta(days=365*2) - timedelta(days=1)
         profile = get_object_or_404(Profile, user=request.user)
         if profile.lab:
             if profile.lab.name == "Admin": # All members of the Admin group can see all datasets
