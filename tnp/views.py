@@ -30,7 +30,7 @@ def send_info_mail_about_new_user(user):
 @login_required
 def overview(request):
     try:
-        end_date = datetime.date(datetime.today())
+        end_date = datetime.date(datetime.today()) + timedelta(days=1)
         start_date = end_date - timedelta(days=365*2)
         profile = get_object_or_404(Profile, user=request.user)
         if profile.lab:
