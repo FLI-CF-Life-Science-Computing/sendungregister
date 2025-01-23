@@ -19,7 +19,7 @@ class Job(YearlyJob):
             # if there are any datasets found create a email message for each dataset and inform the user (added_by)
             if datasets.exists():
                 for dataset in datasets:
-                    print(dataset)
+                    #print(dataset)
                     # create a email message
                     email = EmailMultiAlternatives(
                         subject=f"Reminder Sendungsregister: {dataset.material.name}",
@@ -28,7 +28,7 @@ class Job(YearlyJob):
                         to=[dataset.added_by.email],
                     )
                     # send the email
-                    #email.send()
+                    email.send()
             #else:
                 #logging.error("No datasets found for today's disposal.")
         except Exception as e:
