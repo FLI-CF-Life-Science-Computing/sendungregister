@@ -54,6 +54,7 @@ class DatasetExportResource(resources.ModelResource):
     class Meta:
         model = Dataset
         fields = ('pk','material__name','article_number','specie__name','category','amount','unit__name','import_date','added_by__username','creation_date','status','lab__name','sender','sender__commercial','recipient','recipient__commercial')
+        search_fields = ('material__name','article_number','specie__name','category','added_by__username','status')
         export_order = ('pk','material__name','article_number','specie__name','category','amount','unit__name','import_date','added_by__username','creation_date','status','lab__name','sender','sender__commercial','recipient','recipient__commercial')
 
     def dehydrate_status(self, dataset):

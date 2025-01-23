@@ -1,0 +1,7 @@
+ Dear {{ dataset.added_by.first_name }},
+
+ This is a reminder about the entry {{  dataset.material }} you created inside the sendungsregister ({{ domain }}). Please check your entry. You can open it directly
+ using this link {{ domain }}/edit/{{dataset.pk}}.
+
+ Have a good day
+ For questions you can contact {{ admin_contact }}
