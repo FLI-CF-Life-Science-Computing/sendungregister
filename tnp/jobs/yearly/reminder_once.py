@@ -23,7 +23,7 @@ class Job(YearlyJob):
                     # create a email message
                     email = EmailMultiAlternatives(
                         subject=f"Reminder Sendungsregister: {dataset.material.name}",
-                        body=render_to_string("email/reminder.txt", {"dataset": dataset, "domain": settings.DOMAIN ,"admin_contact": settings.ADMIN_CONTACT}),
+                        body=render_to_string("email/reminder_once.txt", {"dataset": dataset, "domain": settings.DOMAIN ,"admin_contact": settings.ADMIN_CONTACT}),
                         from_email=settings.EMAIL_HOST_USER,
                         to=[dataset.added_by.email],
                     )
